@@ -1,0 +1,21 @@
+.event {
+    width: 100%;
+    margin-bottom: 2.5em;
+}
+
+.event .event_specifics {
+     margin-bottom: 1.25em;
+     border-bottom: 1px solid;
+}
+
+.event .event_specifics a:hover {
+    cursor: pointer;
+}
+
+.event .location {
+    font-size: .85em;
+}
+
+.event .location .event_location {
+    font-weight: bold;
+}
