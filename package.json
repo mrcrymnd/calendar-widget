@@ -1,7 +1,7 @@
 {
   "name": "calendar-widget",
   "version": "1.0.0",
-  "description": "CTL Calender widget for Wordpress",
+  "description": "CTL Calendar widget for Wordpress",
   "main": "ctlevent.js",
   "directories": {
     "test": "tests"
