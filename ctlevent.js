@@ -1,3 +1,11 @@
+var propertiesString = function(properties) {
+    var propString = "";
+    for (var i in properties) {
+        propString += "<span>" + i + ": </span>" + properties[i] + "</br>";
+    }
+    return propString;
+};
+
 var CTLEvent = function(event) {
     this.id = event.guid;
     this.title = event.summary;
@@ -52,6 +60,19 @@ var CTLEvent = function(event) {
             }
         }
     }
+};
+
+CTLEvent.prototype.render = function() {
+    return `
+        <div class="event">
+        <div class="event_specifics">
+        <a href="${this.url}"><h3>${this.title}</h3></a>
+        <h4>${this.start} ${this.startTime} - ${this.startTime}</h4>
+        </div>
+        <div class="event_description"><p>${this.description}</p></div>
+        <div class="location"><span class="event_location">Location: </span>${this.location}</div>
+        <div class="event_properties">${ propertiesString(this.properties)}</div>
+        </div>`;
 };
 
 module.exports = { CTLEvent: CTLEvent };
