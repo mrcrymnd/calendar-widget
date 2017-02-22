@@ -27,23 +27,23 @@ var CTLEvent = function(event) {
             propList = aliasString.split("/").slice(-2);
             switch (propList[0]) {
                 case "Category":
-                    category.push(propList[1]);
+                    this.category.push(propList[1]);
                     break;
 
                 case "Type":
-                    type.push(propList[1]);
+                    this.type.push(propList[1]);
                     break;
 
                 case "Events open to":
-                    eventsOpenTo.push(propList[1]);
+                    this.eventsOpenTo.push(propList[1]);
                     break;
 
                 case "Group-Specific":
-                    groupSpecific.push(propList[1]);
+                    this.groupSpecific.push(propList[1]);
                     break;
 
                 case "Location":
-                    campusLocation.push(propList[1]);
+                    this.campusLocation.push(propList[1]);
                     break;
 
                 default:
