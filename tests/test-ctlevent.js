@@ -16,4 +16,11 @@ describe('CTLEvent', function() {
             assert.equal(e.start, events[0].start_longdate);
         });
     });
+    describe('render', function() {
+        it('should render the event correctly', function() {
+            var e = new CTLEvent(events[0]);
+            var rendered = e.render();
+            assert.ok(rendered.indexOf(e.title) > -1);
+        });
+    });
 });
