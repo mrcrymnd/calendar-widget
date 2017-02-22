@@ -1,4 +1,26 @@
 (function() {
+    var events = [];
+
+    var renderEvents = function(events) {
+        var markup = '';
+        var e;
+        events.forEach(function(eventData) {
+            e = new CTLEvent(eventData);
+            events.push(e);
+
+            // TODO: move rendering somewhere else - needs to be controlled by pagination.
+            markup += e.render();
+        });
+
+        jQuery('#calendarList').append(markup);
+
+        $('.pagination-holder').pagination({
+            items: 100,
+            itemsOnPage: 10,
+            cssStyle: 'light-theme'
+        });
+    };
+
     jQuery(document).ready(function(){
         jQuery.ajax({
             url: 'https://cdn.cul.columbia.edu/ldpd-toolkit/api/events-bw-prox-v2.json.php',
@@ -13,21 +35,13 @@
                 count: 200
             },
             dataType: 'json',
-            success: function(data){
-
-                var markup = '';
-                var e;
-                for (let event of data.bwEventList.events) {
-                    e = new CTLEvent(event);
-                    markup += e.render();
-                }
-
-                jQuery('#calendarList').append(markup);
+            success: function(data) {
+                renderEvents(data.bwEventList.events);
             },
-            error: function() {
-                alert('Bad ajax call');
+            error: function(e) {
+                alert('Bad ajax call', e);
             }
         })
-    })
+    });
 })();
 
