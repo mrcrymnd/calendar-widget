@@ -75,4 +75,6 @@ CTLEvent.prototype.render = function() {
         </div>`;
 };
 
-module.exports = { CTLEvent: CTLEvent };
+if (typeof module !== 'undefined') {
+    module.exports = { CTLEvent: CTLEvent };
+}
