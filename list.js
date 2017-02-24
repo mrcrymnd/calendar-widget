@@ -1,12 +1,12 @@
 (function() {
     var eventsMap = new Map();
 
-    var renderAllEvents = function(eventList) {
-        var markup = '';
-        eventList.forEach(function(value, key, map) {
-            markup += value.render();
+    var renderAllEvents = function(eventMap) {
+        var markup = [];
+        eventMap.forEach(function(value, key, map) {
+            markup.push(value.render());
         });
-        return markup;
+        return markup.join();
     }
 
     /**
