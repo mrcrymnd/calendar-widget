@@ -13,7 +13,18 @@ describe('CTLEvent', function() {
         it('loads data correctly', function() {
             var e = new CTLEvent(events[0]);
             assert.equal(e.id, events[0].guid);
+            assert.equal(e.title, events[0].summary);
             assert.equal(e.start, events[0].start_longdate);
+            assert.equal(e.startTime, events[0].start_time);
+            assert.equal(e.endTime, events[0].end_time);
+            assert.equal(e.url, events[0].eventlink);
+            assert.equal(e.description, events[0].description);
+            assert.equal(e.location, events[0].location_address);
+            assert.deepEqual(e.category, ['Education']);
+            assert.deepEqual(e.type, ['Workshop']);
+            assert.deepEqual(e.eventsOpenTo, ['Faculty', 'Student']);
+            assert.deepEqual(e.groupSpecific, ['Graduate Students']);
+            assert.deepEqual(e.campusLocation, ['Medical Center']);
         });
     });
     describe('render', function() {
