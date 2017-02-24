@@ -1,33 +1,52 @@
 (function() {
-    var eventsMap = new Map();
+    var events = [];
+    var ITEMS_ON_PAGE = 6;
 
-    var renderAllEvents = function(eventMap) {
-        var markup = [];
-        eventMap.forEach(function(value, key, map) {
-            markup.push(value.render());
-        });
-        return markup.join();
+    /**
+     * Generate an element containing all the events that belong on
+     * the given page number.
+     */
+    var renderEvents = function(eArray, pageNum) {
+        var $container = jQuery('<div class="ctl-events" />');
+        var start = (pageNum - 1) * ITEMS_ON_PAGE;
+        var end = start + ITEMS_ON_PAGE;
+        for (var i = start; i < end && i < eArray.length; i++) {
+            $container.append(jQuery(
+                eArray[i].render()
+            ));
+        }
+        return $container;
     }
+
+    /**
+     * Clear the events from the DOM and re-render them.
+     */
+    var refreshEvents = function(eArray, pageNum) {
+        jQuery('.ctl-events').remove();
+        jQuery('#calendarList').append(renderEvents(eArray, pageNum));
+    };
 
     /**
      * @param events: JSON event object fetched from Bedeworks
      */
-    var initializeEventsPage = function(events) {
+    var initializeEventsPage = function(eventsJson) {
         // build events map
         var e;
-        events.forEach(function(eventData) {
+        eventsJson.forEach(function(eventData) {
             e = new CTLEvent(eventData);
-            eventsMap.set(e.id, e);
+            events.push(e)
         });
-
-
-        jQuery('#calendarList').append(renderAllEvents(eventsMap));
 
         $('.pagination-holder').pagination({
-            items: 100,
-            itemsOnPage: 10,
-            cssStyle: 'ctl-theme'
+            items: events.length,
+            itemsOnPage: ITEMS_ON_PAGE,
+            cssStyle: 'ctl-theme',
+            onPageClick: function(pageNumber) {
+                refreshEvents(events, pageNumber);
+            }
         });
+
+        refreshEvents(events, 1);
     };
 
     jQuery(document).ready(function(){
@@ -53,4 +72,3 @@
         })
     });
 })();
-
