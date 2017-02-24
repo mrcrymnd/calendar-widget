@@ -1,18 +1,27 @@
 (function() {
-    var events = [];
+    var eventsMap = new Map();
 
-    var renderEvents = function(events) {
+    var renderAllEvents = function(eventList) {
         var markup = '';
+        eventList.forEach(function(value, key, map) {
+            markup += value.render();
+        });
+        return markup;
+    }
+
+    /**
+     * @param events: JSON event object fetched from Bedeworks
+     */
+    var initializeEventsPage = function(events) {
+        // build events map
         var e;
         events.forEach(function(eventData) {
             e = new CTLEvent(eventData);
-            events.push(e);
-
-            // TODO: move rendering somewhere else - needs to be controlled by pagination.
-            markup += e.render();
+            eventsMap.set(e.id, e);
         });
 
-        jQuery('#calendarList').append(markup);
+
+        jQuery('#calendarList').append(renderAllEvents(eventsMap));
 
         $('.pagination-holder').pagination({
             items: 100,
@@ -36,7 +45,7 @@
             },
             dataType: 'json',
             success: function(data) {
-                renderEvents(data.bwEventList.events);
+                initializeEventsPage(data.bwEventList.events);
             },
             error: function(e) {
                 alert('Bad ajax call', e);
