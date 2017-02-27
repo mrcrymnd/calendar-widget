@@ -1,6 +1,7 @@
 (function() {
     var events = [];
     var ITEMS_ON_PAGE = 6;
+    var querySet = [];
 
     var index = lunr(function() {
         this.ref('id');
@@ -29,7 +30,8 @@
                 var e = events[results[r].ref];
                 searchResults.push(e);
             }
-            refreshEvents(searchResults, 1);
+            querySet = searchResults;
+            refreshEvents(querySet, 1);
         }
         return false;
     };
@@ -103,7 +105,7 @@
             itemsOnPage: ITEMS_ON_PAGE,
             cssStyle: 'ctl-theme',
             onPageClick: function(pageNumber) {
-                refreshEvents(events, pageNumber);
+                querySet ? refreshEvents(querySet, pageNumber) : refreshEvents(events, pageNumber);
             }
         });
 
