@@ -2,6 +2,57 @@
     var events = [];
     var ITEMS_ON_PAGE = 6;
 
+    var index = lunr(function() {
+        this.ref('id');
+        this.field('title', {boost: 10});
+        this.field('description', {boost: 5});
+
+    });
+
+    var doSearch = function() {
+        var q = $('#q').val();
+        var results = index.search(q);
+        var $el = $('#calendarList');
+        $el.empty();
+        $el.show();
+        $el.append('<div class="arrow"></div>');
+        $el.append(
+            $('<h2>RESULTS FOR: "' + q + '"</h2>')
+        );
+        if (results.length === 0) {
+            $el.append('<div class="q-no-item">Unfortunately, there are ' +
+                'no results matching what you\'re looking for in ' +
+                'the Columbia Film Glossary content.</div>');
+        } else {
+            var searchResults = [];
+            for (var r in results) {
+                var e = events[results[r].ref];
+                searchResults.push(e);
+            }
+            refreshEvents(searchResults, 1);
+        }
+        return false;
+    };
+
+    var clearSearch = function() {
+        $('#calendarList').empty();
+        $('#calendarList').hide();
+
+    };
+
+    $(document).ready(function() {
+        $('#search').click(doSearch);
+        $('#clear-search').click(clearSearch);
+        $('#q').keyup(function() {
+            $('#calendarList').empty();
+            if ($(this).val().length < 2) {
+                $('#calendarList').hide();
+                return;
+            }
+            return doSearch();
+        });
+    });
+
     /**
      * Generate an element containing all the events that belong on
      * the given page number.
@@ -24,6 +75,7 @@
     var refreshEvents = function(eArray, pageNum) {
         jQuery('.ctl-events').remove();
         jQuery('#calendarList').append(renderEvents(eArray, pageNum));
+        console.log("refreshing events")
     };
 
     /**
@@ -32,9 +84,18 @@
     var initializeEventsPage = function(eventsJson) {
         // build events map
         var e;
+        var i = 0;
+
         eventsJson.forEach(function(eventData) {
             e = new CTLEvent(eventData);
             events.push(e)
+
+            // build lunr index
+            index.add({
+                id: i++,
+                title: e.title,
+                description: e.description
+            });
         });
 
         $('.pagination-holder').pagination({

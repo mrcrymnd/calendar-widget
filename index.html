@@ -1,6 +1,7 @@
 <!doctype html>
 <html>
     <head>
+        <script src="lib/lunr.min.js" type="text/javascript"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <script src="lib/jquery.simplePagination.js"></script>
         <script src="ctlevent.js"></script>
@@ -10,6 +11,14 @@
     <body>
         <h1>CTL Event testing</h1>
         <div class="pagination-holder"></div>
+        <div class="search-wrapper">
+            <form role="search">
+                <input id="q" type="text" required="" class="search-box" placeholder="I'm searching for...">
+                <button class="close-icon" id="clear-search" type="reset"></button>
+                <button type="submit" id="search" style="display:none;"></button>
+            </form>
+            <div id="search-results"></div>
+        </div>
         <div id="calendarList"></div>
         <div class="pagination-holder"></div>
     </body>
