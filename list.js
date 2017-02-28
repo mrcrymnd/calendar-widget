@@ -1,6 +1,57 @@
 (function() {
-    var events = [];
+    var ALL_EVENTS = [];
+    var FILTERED_EVENTS = [];
+
     var ITEMS_ON_PAGE = 6;
+
+    var index = lunr(function() {
+        this.ref('id');
+        this.field('title', {boost: 10});
+        this.field('description', {boost: 5});
+    });
+
+    /**
+     * Given an array of all events and a search query,
+     * return an array of search results.
+     */
+    var filterEvents = function(allEvents, q) {
+        var results = index.search(q);
+
+        var searchResults = [];
+        for (var r in results) {
+            var e = allEvents[results[r].ref];
+            searchResults.push(e);
+        }
+
+        return searchResults;
+    };
+
+    var doSearch = function(events) {
+        var $el = $('#calendarList');
+        var q = $('#q').val();
+
+        $el.empty();
+        $el.show();
+        $el.append('<div class="arrow"></div>');
+        $el.append(
+            $('<h2>Results for: "' + q + '"</h2>')
+        );
+
+        FILTERED_EVENTS = filterEvents(ALL_EVENTS, q);
+        if (FILTERED_EVENTS.length === 0) {
+            $el.append('<div class="q-no-item">Unfortunately, there are ' +
+                'no results matching what you\'re looking for in ' +
+                'the Columbia Film Glossary content.</div>');
+        } else {
+            refreshEvents(FILTERED_EVENTS, 1);
+        }
+        return false;
+    };
+
+    var clearSearch = function() {
+        $('#calendarList').empty();
+        $('#calendarList').hide();
+    };
 
     /**
      * Generate an element containing all the events that belong on
@@ -24,6 +75,7 @@
     var refreshEvents = function(eArray, pageNum) {
         jQuery('.ctl-events').remove();
         jQuery('#calendarList').append(renderEvents(eArray, pageNum));
+        console.log("refreshing events")
     };
 
     /**
@@ -32,21 +84,34 @@
     var initializeEventsPage = function(eventsJson) {
         // build events map
         var e;
+        var i = 0;
+
         eventsJson.forEach(function(eventData) {
             e = new CTLEvent(eventData);
-            events.push(e)
+            ALL_EVENTS.push(e)
+
+            // build lunr index
+            index.add({
+                id: i++,
+                title: e.title,
+                description: e.description
+            });
         });
 
         $('.pagination-holder').pagination({
-            items: events.length,
+            items: ALL_EVENTS.length,
             itemsOnPage: ITEMS_ON_PAGE,
             cssStyle: 'ctl-theme',
             onPageClick: function(pageNumber) {
-                refreshEvents(events, pageNumber);
+                if (FILTERED_EVENTS.length > 0 || $('#q').val().length > 1) {
+                    refreshEvents(FILTERED_EVENTS, pageNumber);
+                } else {
+                    refreshEvents(ALL_EVENTS, pageNumber);
+                }
             }
         });
 
-        refreshEvents(events, 1);
+        refreshEvents(ALL_EVENTS, 1);
     };
 
     jQuery(document).ready(function(){
@@ -67,8 +132,19 @@
                 initializeEventsPage(data.bwEventList.events);
             },
             error: function(e) {
-                alert('Bad ajax call', e);
+                console.error('Bad ajax call', e);
             }
         })
+
+        $('#search').click(doSearch);
+        $('#clear-search').click(clearSearch);
+        $('#q').keyup(function() {
+            $('#calendarList').empty();
+            if ($(this).val().length < 2) {
+                $('#calendarList').hide();
+                return;
+            }
+            return doSearch();
+        });
     });
 })();
