@@ -1,7 +1,8 @@
 (function() {
-    var events = [];
+    var allEvents = [];
+    var filteredEvents = [];
+
     var ITEMS_ON_PAGE = 6;
-    var querySet = [];
 
     var index = lunr(function() {
         this.ref('id');
@@ -9,28 +10,40 @@
         this.field('description', {boost: 5});
     });
 
-    var doSearch = function() {
-        var q = $('#q').val();
+    /**
+     * Given an array of all events and a search query,
+     * return an array of search results.
+     */
+    var filterEvents = function(allEvents, q) {
         var results = index.search(q);
+
+        var searchResults = [];
+        for (var r in results) {
+            var e = allEvents[results[r].ref];
+            searchResults.push(e);
+        }
+
+        return searchResults;
+    };
+
+    var doSearch = function(events) {
         var $el = $('#calendarList');
+        var q = $('#q').val();
+
         $el.empty();
         $el.show();
         $el.append('<div class="arrow"></div>');
         $el.append(
             $('<h2>RESULTS FOR: "' + q + '"</h2>')
         );
-        if (results.length === 0) {
+
+        filteredEvents = filterEvents(allEvents, q);
+        if (filteredEvents.length === 0) {
             $el.append('<div class="q-no-item">Unfortunately, there are ' +
                 'no results matching what you\'re looking for in ' +
                 'the Columbia Film Glossary content.</div>');
         } else {
-            var searchResults = [];
-            for (var r in results) {
-                var e = events[results[r].ref];
-                searchResults.push(e);
-            }
-            querySet = searchResults;
-            refreshEvents(querySet, 1);
+            refreshEvents(filteredEvents, 1);
         }
         return false;
     };
@@ -88,7 +101,7 @@
 
         eventsJson.forEach(function(eventData) {
             e = new CTLEvent(eventData);
-            events.push(e)
+            allEvents.push(e)
 
             // build lunr index
             index.add({
@@ -99,17 +112,19 @@
         });
 
         $('.pagination-holder').pagination({
-            items: events.length,
+            items: allEvents.length,
             itemsOnPage: ITEMS_ON_PAGE,
             cssStyle: 'ctl-theme',
             onPageClick: function(pageNumber) {
-                (querySet.length > 0) ?
-                    refreshEvents(querySet, pageNumber) :
-                    refreshEvents(events, pageNumber);
+                if (filteredEvents.length > 0 || $('#q').val().length > 1) {
+                    refreshEvents(filteredEvents, pageNumber);
+                } else {
+                    refreshEvents(allEvents, pageNumber);
+                }
             }
         });
 
-        refreshEvents(events, 1);
+        refreshEvents(allEvents, 1);
     };
 
     jQuery(document).ready(function(){
