@@ -1,3 +1,7 @@
+/* global $, jQuery */
+/* global lunr */
+/* global CTLEvent */
+
 (function() {
     var ALL_EVENTS = [];
     var FILTERED_EVENTS = [];
@@ -37,7 +41,7 @@
             $('<h2>Results for: "' + q + '"</h2>')
         );
 
-        FILTERED_EVENTS = filterEvents(ALL_EVENTS, q);
+        FILTERED_EVENTS = filterEvents(events, q);
         if (FILTERED_EVENTS.length === 0) {
             $el.append('<div class="q-no-item">Unfortunately, there are ' +
                 'no results matching what you\'re looking for in ' +
@@ -67,7 +71,7 @@
             ));
         }
         return $container;
-    }
+    };
 
     /**
      * Clear the events from the DOM and re-render them.
@@ -75,7 +79,6 @@
     var refreshEvents = function(eArray, pageNum) {
         jQuery('.ctl-events').remove();
         jQuery('#calendarList').append(renderEvents(eArray, pageNum));
-        console.log("refreshing events")
     };
 
     /**
@@ -88,7 +91,7 @@
 
         eventsJson.forEach(function(eventData) {
             e = new CTLEvent(eventData);
-            ALL_EVENTS.push(e)
+            ALL_EVENTS.push(e);
 
             // build lunr index
             index.add({
@@ -130,13 +133,12 @@
             dataType: 'json',
             success: function(data) {
                 initializeEventsPage(data.bwEventList.events);
-            },
-            error: function(e) {
-                console.error('Bad ajax call', e);
             }
-        })
+        });
 
-        $('#search').click(doSearch);
+        $('#search').click(function() {
+            doSearch(ALL_EVENTS);
+        });
         $('#clear-search').click(clearSearch);
         $('#q').keyup(function() {
             $('#calendarList').empty();
@@ -144,7 +146,7 @@
                 $('#calendarList').hide();
                 return;
             }
-            return doSearch();
+            return doSearch(ALL_EVENTS);
         });
     });
 })();
