@@ -34,7 +34,7 @@
         $el.show();
         $el.append('<div class="arrow"></div>');
         $el.append(
-            $('<h2>RESULTS FOR: "' + q + '"</h2>')
+            $('<h2>Results for: "' + q + '"</h2>')
         );
 
         FILTERED_EVENTS = filterEvents(ALL_EVENTS, q);
@@ -52,19 +52,6 @@
         $('#calendarList').empty();
         $('#calendarList').hide();
     };
-
-    $(document).ready(function() {
-        $('#search').click(doSearch);
-        $('#clear-search').click(clearSearch);
-        $('#q').keyup(function() {
-            $('#calendarList').empty();
-            if ($(this).val().length < 2) {
-                $('#calendarList').hide();
-                return;
-            }
-            return doSearch();
-        });
-    });
 
     /**
      * Generate an element containing all the events that belong on
@@ -148,5 +135,16 @@
                 console.error('Bad ajax call', e);
             }
         })
+
+        $('#search').click(doSearch);
+        $('#clear-search').click(clearSearch);
+        $('#q').keyup(function() {
+            $('#calendarList').empty();
+            if ($(this).val().length < 2) {
+                $('#calendarList').hide();
+                return;
+            }
+            return doSearch();
+        });
     });
 })();
