@@ -77,6 +77,7 @@
      * Clear the events from the DOM and re-render them.
      */
     var refreshEvents = function(eArray, pageNum) {
+        $('.pagination-holder').pagination('updateItems', eArray.length);
         jQuery('.ctl-events').remove();
         jQuery('#calendarList').append(renderEvents(eArray, pageNum));
     };
@@ -142,8 +143,9 @@
         $('#clear-search').click(clearSearch);
         $('#q').keyup(function() {
             $('#calendarList').empty();
+
             if ($(this).val().length < 2) {
-                $('#calendarList').hide();
+                refreshEvents(ALL_EVENTS, 1);
                 return;
             }
             return doSearch(ALL_EVENTS);
