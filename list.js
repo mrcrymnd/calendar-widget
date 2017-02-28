@@ -1,6 +1,6 @@
 (function() {
-    var allEvents = [];
-    var filteredEvents = [];
+    var ALL_EVENTS = [];
+    var FILTERED_EVENTS = [];
 
     var ITEMS_ON_PAGE = 6;
 
@@ -37,13 +37,13 @@
             $('<h2>RESULTS FOR: "' + q + '"</h2>')
         );
 
-        filteredEvents = filterEvents(allEvents, q);
-        if (filteredEvents.length === 0) {
+        FILTERED_EVENTS = filterEvents(ALL_EVENTS, q);
+        if (FILTERED_EVENTS.length === 0) {
             $el.append('<div class="q-no-item">Unfortunately, there are ' +
                 'no results matching what you\'re looking for in ' +
                 'the Columbia Film Glossary content.</div>');
         } else {
-            refreshEvents(filteredEvents, 1);
+            refreshEvents(FILTERED_EVENTS, 1);
         }
         return false;
     };
@@ -101,7 +101,7 @@
 
         eventsJson.forEach(function(eventData) {
             e = new CTLEvent(eventData);
-            allEvents.push(e)
+            ALL_EVENTS.push(e)
 
             // build lunr index
             index.add({
@@ -112,19 +112,19 @@
         });
 
         $('.pagination-holder').pagination({
-            items: allEvents.length,
+            items: ALL_EVENTS.length,
             itemsOnPage: ITEMS_ON_PAGE,
             cssStyle: 'ctl-theme',
             onPageClick: function(pageNumber) {
-                if (filteredEvents.length > 0 || $('#q').val().length > 1) {
-                    refreshEvents(filteredEvents, pageNumber);
+                if (FILTERED_EVENTS.length > 0 || $('#q').val().length > 1) {
+                    refreshEvents(FILTERED_EVENTS, pageNumber);
                 } else {
-                    refreshEvents(allEvents, pageNumber);
+                    refreshEvents(ALL_EVENTS, pageNumber);
                 }
             }
         });
 
-        refreshEvents(allEvents, 1);
+        refreshEvents(ALL_EVENTS, 1);
     };
 
     jQuery(document).ready(function(){
