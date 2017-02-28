@@ -75,7 +75,6 @@
     var refreshEvents = function(eArray, pageNum) {
         jQuery('.ctl-events').remove();
         jQuery('#calendarList').append(renderEvents(eArray, pageNum));
-        console.log("refreshing events")
     };
 
     /**
@@ -140,8 +139,9 @@
         $('#clear-search').click(clearSearch);
         $('#q').keyup(function() {
             $('#calendarList').empty();
+
             if ($(this).val().length < 2) {
-                $('#calendarList').hide();
+                refreshEvents(ALL_EVENTS, 1);
                 return;
             }
             return doSearch();
