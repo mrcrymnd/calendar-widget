@@ -1,3 +1,6 @@
+/* eslint-env node */
+/* eslint-env mocha */
+
 var assert = require('assert');
 var CTLEvent = require('../ctlevent.js').CTLEvent;
 var fs = require('fs');
@@ -8,7 +11,7 @@ describe('CTLEvent', function() {
 
     describe('constructor', function() {
         it('should not fail when given empty data', function() {
-            var e = new CTLEvent({});
+            new CTLEvent({});
         });
         it('loads data correctly', function() {
             var e = new CTLEvent(events[0]);
