@@ -1,7 +1,10 @@
+/* eslint-env es6 */
+/* eslint-env node */
+
 var propertiesString = function(properties) {
-    var propString = "";
+    var propString = '';
     for (var i in properties) {
-        propString += "<span>" + i + ": </span>" + properties[i] + "</br>";
+        propString += '<span>' + i + ': </span>' + properties[i] + '</br>';
     }
     return propString;
 };
@@ -30,32 +33,31 @@ var CTLEvent = function(event) {
         var aliasString;
         var propList;
 
-        if (xprop[i]["X-BEDEWORK-ALIAS"]) {
-            aliasString = xprop[i]["X-BEDEWORK-ALIAS"].values.text;
-            propList = aliasString.split("/").slice(-2);
+        if (xprop[i]['X-BEDEWORK-ALIAS']) {
+            aliasString = xprop[i]['X-BEDEWORK-ALIAS'].values.text;
+            propList = aliasString.split('/').slice(-2);
             switch (propList[0]) {
-                case "Category":
+                case 'Category':
                     this.category.push(propList[1]);
                     break;
 
-                case "Type":
+                case 'Type':
                     this.type.push(propList[1]);
                     break;
 
-                case "Events open to":
+                case 'Events open to':
                     this.eventsOpenTo.push(propList[1]);
                     break;
 
-                case "Group-Specific":
+                case 'Group-Specific':
                     this.groupSpecific.push(propList[1]);
                     break;
 
-                case "Location":
+                case 'Location':
                     this.campusLocation.push(propList[1]);
                     break;
 
                 default:
-                    console.log('data skipped:', xprop[i]);
                     break;
             }
         }

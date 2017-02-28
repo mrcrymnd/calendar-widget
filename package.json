@@ -10,9 +10,11 @@
     "npm": "^4.2.0"
   },
   "devDependencies": {
+    "eslint": "^3.16.1",
     "mocha": "^3.2.0"
   },
   "scripts": {
+    "eslint": "eslint *.js",
     "test": "mocha tests/"
   },
   "repository": {
