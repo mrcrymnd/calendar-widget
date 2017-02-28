@@ -39,9 +39,9 @@
 
         FILTERED_EVENTS = filterEvents(ALL_EVENTS, q);
         if (FILTERED_EVENTS.length === 0) {
-            $el.append(`<div class="q-no-item">Unfortunately, there are
-                no results matching what you're looking for in
-                the CTL Events Calendar.</div>`);
+            $el.append('<div class="q-no-item">Unfortunately, there are ' +
+                'no results matching what you\'re looking for in ' +
+                'the Columbia Film Glossary content.</div>');
         } else {
             refreshEvents(FILTERED_EVENTS, 1);
         }
