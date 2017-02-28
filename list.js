@@ -7,7 +7,6 @@
         this.ref('id');
         this.field('title', {boost: 10});
         this.field('description', {boost: 5});
-
     });
 
     var doSearch = function() {
@@ -39,7 +38,6 @@
     var clearSearch = function() {
         $('#calendarList').empty();
         $('#calendarList').hide();
-
     };
 
     $(document).ready(function() {
@@ -105,7 +103,9 @@
             itemsOnPage: ITEMS_ON_PAGE,
             cssStyle: 'ctl-theme',
             onPageClick: function(pageNumber) {
-                querySet ? refreshEvents(querySet, pageNumber) : refreshEvents(events, pageNumber);
+                (querySet.length > 0) ?
+                    refreshEvents(querySet, pageNumber) :
+                    refreshEvents(events, pageNumber);
             }
         });
 
@@ -130,7 +130,7 @@
                 initializeEventsPage(data.bwEventList.events);
             },
             error: function(e) {
-                alert('Bad ajax call', e);
+                console.error('Bad ajax call', e);
             }
         })
     });
