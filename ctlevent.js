@@ -68,7 +68,7 @@ CTLEvent.prototype.render = function() {
     return `
         <div class="event">
         <div class="event_specifics">
-        <a href="${this.url}"><h3>${this.title}</h3></a>
+        <h3><a href="${this.url}">${this.title}</a></h3>
         <h4>${this.start} ${this.startTime} - ${this.startTime}</h4>
         </div>
         <div class="event_description"><p>${this.description}</p></div>
