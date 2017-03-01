@@ -14,7 +14,7 @@
     "mocha": "^3.2.0"
   },
   "scripts": {
-    "eslint": "eslint *.js",
+    "eslint": "eslint *.js tests/*.js",
     "test": "mocha tests/"
   },
   "repository": {
