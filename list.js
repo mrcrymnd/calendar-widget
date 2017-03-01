@@ -1,8 +1,8 @@
-/* global $, jQuery */
+/* global jQuery */
 /* global lunr */
 /* global CTLEvent */
 
-(function() {
+(function($) {
     var ALL_EVENTS = [];
     var FILTERED_EVENTS = [];
 
@@ -119,6 +119,20 @@
     };
 
     jQuery(document).ready(function(){
+        var boilerplate =  '<div class="pagination-holder"></div>' +
+                            '<div class="search-wrapper">' +
+                                '<form role="search">' +
+                                    '<input id="q" type="text" required="" class="search-box" placeholder="I\'m searching for...">' +
+                                    '<button class="close-icon" id="clear-search" type="reset">Reset</button>' +
+                                    '<button type="submit" id="search" style="display:none;">Search</button>' +
+                                '</form>' +
+                                '<div id="search-results"></div>' +
+                            '</div>' +
+                            '<div id="calendarList"></div>' +
+                            '<div class="pagination-holder"></div>';
+
+        jQuery('#calendar-wrapper').append(boilerplate);
+
         jQuery.ajax({
             url: 'https://cdn.cul.columbia.edu/ldpd-toolkit/api/events-bw-prox-v2.json.php',
             type: 'GET',
@@ -151,4 +165,4 @@
             return doSearch(ALL_EVENTS);
         });
     });
-})();
+})(jQuery);
