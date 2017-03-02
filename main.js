@@ -1,6 +1,6 @@
 /* global jQuery */
 /* global lunr */
-/* global CTLEvent */
+/* global CTLEventUtils, CTLEventsManager */
 
 (function($) {
     var ALL_EVENTS = [];
@@ -14,22 +14,6 @@
         this.field('description', {boost: 5});
     });
 
-    /**
-     * Given an array of all events and a search query,
-     * return an array of search results.
-     */
-    var filterEvents = function(allEvents, q) {
-        var results = index.search(q);
-
-        var searchResults = [];
-        for (var r in results) {
-            var e = allEvents[results[r].ref];
-            searchResults.push(e);
-        }
-
-        return searchResults;
-    };
-
     var doSearch = function(events) {
         var $el = $('#calendarList');
         var q = $('#q').val();
@@ -38,14 +22,13 @@
         $el.show();
         $el.append('<div class="arrow"></div>');
         $el.append(
-            $('<h2>Results for: "' + q + '"</h2>')
-        );
+                $('<h2>Results for: "' + q + '"</h2>')
+                );
 
-        FILTERED_EVENTS = filterEvents(events, q);
+        FILTERED_EVENTS = CTLEventUtils.filterEvents(events, index, q);
         if (FILTERED_EVENTS.length === 0) {
             $el.append('<div class="q-no-item">Unfortunately, there are ' +
-                'no results matching what you\'re looking for in ' +
-                'the Columbia Film Glossary content.</div>');
+                    'no results matching what you\'re looking for.</div>');
         } else {
             refreshEvents(FILTERED_EVENTS, 1);
         }
@@ -67,8 +50,8 @@
         var end = start + ITEMS_ON_PAGE;
         for (var i = start; i < end && i < eArray.length; i++) {
             $container.append(jQuery(
-                eArray[i].render()
-            ));
+                        eArray[i].render()
+                        ));
         }
         return $container;
     };
@@ -86,21 +69,7 @@
      * @param events: JSON event object fetched from Bedeworks
      */
     var initializeEventsPage = function(eventsJson) {
-        // build events map
-        var e;
-        var i = 0;
-
-        eventsJson.forEach(function(eventData) {
-            e = new CTLEvent(eventData);
-            ALL_EVENTS.push(e);
-
-            // build lunr index
-            index.add({
-                id: i++,
-                title: e.title,
-                description: e.description
-            });
-        });
+        ALL_EVENTS = CTLEventsManager.loadEvents(eventsJson, index);
 
         $('.pagination-holder').pagination({
             items: ALL_EVENTS.length,
@@ -120,16 +89,15 @@
 
     jQuery(document).ready(function(){
         var boilerplate =  '<div class="pagination-holder"></div>' +
-                            '<div class="search-wrapper">' +
-                                '<form role="search">' +
-                                    '<input id="q" type="text" required="" class="search-box" placeholder="I\'m searching for...">' +
-                                    '<button class="close-icon" id="clear-search" type="reset">Reset</button>' +
-                                    '<button type="submit" id="search" style="display:none;">Search</button>' +
-                                '</form>' +
-                                '<div id="search-results"></div>' +
-                            '</div>' +
-                            '<div id="calendarList"></div>' +
-                            '<div class="pagination-holder"></div>';
+            '<div class="search-wrapper">' +
+            '<form role="search">' +
+            '<input id="q" type="text" required="" class="search-box" placeholder="I\'m searching for...">' +
+            '<button class="close-icon" id="clear-search" type="reset">Reset</button>' +
+            '</form>' +
+            '<div id="search-results"></div>' +
+            '</div>' +
+            '<div id="calendarList"></div>' +
+            '<div class="pagination-holder"></div>';
 
         jQuery('#calendar-wrapper').append(boilerplate);
 
@@ -151,9 +119,6 @@
             }
         });
 
-        $('#search').click(function() {
-            doSearch(ALL_EVENTS);
-        });
         $('#clear-search').click(clearSearch);
         $('#q').keyup(function() {
             $('#calendarList').empty();
