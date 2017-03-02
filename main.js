@@ -3,8 +3,6 @@
 /* global CTLEventUtils, CTLEventsManager */
 
 (function($) {
-    var ALL_EVENTS = [];
-    var FILTERED_EVENTS = [];
 
     var ITEMS_ON_PAGE = 6;
 
@@ -25,12 +23,12 @@
                 $('<h2>Results for: "' + q + '"</h2>')
                 );
 
-        FILTERED_EVENTS = CTLEventUtils.filterEvents(events, index, q);
-        if (FILTERED_EVENTS.length === 0) {
+        CTLEventsManager.filteredEvents = CTLEventUtils.filterEvents(events, index, q);
+        if (CTLEventsManager.filteredEvents.length === 0) {
             $el.append('<div class="q-no-item">Unfortunately, there are ' +
                     'no results matching what you\'re looking for.</div>');
         } else {
-            refreshEvents(FILTERED_EVENTS, 1);
+            refreshEvents(CTLEventsManager.filteredEvents, 1);
         }
         return false;
     };
@@ -69,22 +67,22 @@
      * @param events: JSON event object fetched from Bedeworks
      */
     var initializeEventsPage = function(eventsJson) {
-        ALL_EVENTS = CTLEventsManager.loadEvents(eventsJson, index);
+        CTLEventsManager.allEvents = CTLEventsManager.loadEvents(eventsJson, index);
 
         $('.pagination-holder').pagination({
-            items: ALL_EVENTS.length,
+            items: CTLEventsManager.allEvents.length,
             itemsOnPage: ITEMS_ON_PAGE,
             cssStyle: 'ctl-theme',
             onPageClick: function(pageNumber) {
-                if (FILTERED_EVENTS.length > 0 || $('#q').val().length > 1) {
-                    refreshEvents(FILTERED_EVENTS, pageNumber);
+                if (CTLEventsManager.filteredEvents.length > 0 || $('#q').val().length > 1) {
+                    refreshEvents(CTLEventsManager.filteredEvents, pageNumber);
                 } else {
-                    refreshEvents(ALL_EVENTS, pageNumber);
+                    refreshEvents(CTLEventsManager.allEvents, pageNumber);
                 }
             }
         });
 
-        refreshEvents(ALL_EVENTS, 1);
+        refreshEvents(CTLEventsManager.allEvents, 1);
     };
 
     jQuery(document).ready(function(){
@@ -124,10 +122,10 @@
             $('#calendarList').empty();
 
             if ($(this).val().length < 2) {
-                refreshEvents(ALL_EVENTS, 1);
+                refreshEvents(CTLEventsManager.allEvents, 1);
                 return;
             }
-            return doSearch(ALL_EVENTS);
+            return doSearch(CTLEventsManager.allEvents);
         });
     });
 })(jQuery);

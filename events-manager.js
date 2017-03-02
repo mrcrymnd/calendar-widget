@@ -6,6 +6,9 @@ if (typeof require === 'function') {
 
 var CTLEventsManager = {};
 
+CTLEventsManager.allEvents = [];
+CTLEventsManager.filteredEvents = [];
+
 /**
  * Takes an array of events from JSON, and initializes a CTLEvent
  * instance for each one. This also indexes these items with the
