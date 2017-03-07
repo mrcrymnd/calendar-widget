@@ -13,6 +13,19 @@ var propertiesString = function(properties) {
     return propString;
 };
 
+var addProperty = function(that, propList) {
+    function checkPropertyName(element) {
+        return element.name == propList[0];
+    }
+
+    var found;
+    if ((found = that.propertyArray.findIndex(checkPropertyName)) > -1) {
+        that.propertyArray[found].values.push(propList[1]);
+    } else {
+        that.propertyArray.push({name: propList[0], values: [propList[1]]});
+    }
+};
+
 var CTLEvent = function(event) {
     this.id = event.guid;
     this.title = event.summary;
@@ -43,15 +56,7 @@ var CTLEvent = function(event) {
             aliasString = xprop[i]['X-BEDEWORK-ALIAS'].values.text;
             propList = aliasString.split('/').slice(-2);
 
-            function checkPropertyName(element) {
-                return element.name == propList[0];
-            }
-
-            if ((found = this.propertyArray.findIndex(checkPropertyName)) > -1) {
-                this.propertyArray[found].values.push(propList[1]);
-            } else {
-                this.propertyArray.push({name: propList[0], values: [propList[1]]})
-            }
+            addProperty(this, propList);
         }
     }
 };
