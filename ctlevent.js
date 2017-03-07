@@ -4,7 +4,11 @@
 var propertiesString = function(properties) {
     var propString = '';
     for (var i in properties) {
-        propString += '<span>' + i + ': </span>' + properties[i] + '</br>';
+        propString += '<span class="ctl-property-name">' + properties[i].name + ': </span>';
+        for (var j in properties[i].values) {
+            propString += '<span class="ctl-property-value">' + properties[i].values[j] + '</span> ';
+        }
+        propString += '</br>';
     }
     return propString;
 };
@@ -61,7 +65,7 @@ CTLEvent.prototype.render = function() {
         </div>
         <div class="event_description"><p>${this.description}</p></div>
         <div class="location"><span class="event_location">Location: </span>${this.location}</div>
-        <div class="event_properties">${ propertiesString(this.properties)}</div>
+        <div class="event_properties">${ propertiesString(this.propertyArray)}</div>
         </div>`;
 };
 
