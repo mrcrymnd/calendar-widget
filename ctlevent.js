@@ -25,6 +25,8 @@ var CTLEvent = function(event) {
     this.groupSpecific = [];
     this.campusLocation = [];
 
+    this.propertyArray = [];
+
     var xprop = event.xproperties;
     if (!xprop) {
         xprop = [];
@@ -36,29 +38,15 @@ var CTLEvent = function(event) {
         if (xprop[i]['X-BEDEWORK-ALIAS']) {
             aliasString = xprop[i]['X-BEDEWORK-ALIAS'].values.text;
             propList = aliasString.split('/').slice(-2);
-            switch (propList[0]) {
-                case 'Category':
-                    this.category.push(propList[1]);
-                    break;
 
-                case 'Type':
-                    this.type.push(propList[1]);
-                    break;
+            function checkPropertyName(element) {
+                return element.name == propList[0];
+            }
 
-                case 'Events open to':
-                    this.eventsOpenTo.push(propList[1]);
-                    break;
-
-                case 'Group-Specific':
-                    this.groupSpecific.push(propList[1]);
-                    break;
-
-                case 'Location':
-                    this.campusLocation.push(propList[1]);
-                    break;
-
-                default:
-                    break;
+            if ((found = this.propertyArray.findIndex(checkPropertyName)) > -1) {
+                this.propertyArray[found].values.push(propList[1]);
+            } else {
+                this.propertyArray.push({name: propList[0], values: [propList[1]]})
             }
         }
     }
