@@ -1,4 +1,5 @@
 /* eslint-env node */
+/* global jQuery */
 
 if (typeof require === 'function') {
     var CTLEvent = require('./ctlevent.js').CTLEvent;
@@ -33,6 +34,28 @@ CTLEventsManager.loadEvents = function(eventsJson, searchIndex) {
     });
 
     return events;
+};
+
+CTLEventsManager.renderLocationDropdown = function() {
+    var $container = jQuery(
+        '<select id="location-dropdown">' +
+            '<option value="null">Location: All</option>' +
+            '</select>');
+
+    var locations = [];
+    CTLEventsManager.allEvents.forEach(function(e) {
+        var loc = e.getCampusLocation();
+        if (locations.indexOf(loc) === -1) {
+            locations.push(loc);
+        }
+    });
+
+    locations.forEach(function(e) {
+        $container.append(
+            '<option value="' + e + '">' + e + '</option>');
+    });
+
+    return $container;
 };
 
 if (typeof module !== 'undefined') {
