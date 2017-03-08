@@ -93,10 +93,29 @@
             refreshEvents(CTLEventsManager.filteredEvents, 1);
         });
 
+        $('input[name="start_date"]').on('change', function(e) {
+            var date = e.target.value;
+            CTLEventsManager.filteredEvents =
+                CTLEventUtils.filterEventsByDateRange(
+                    CTLEventsManager.allEvents,
+                    date ? new Date(date + ' 00:00:00 GMT-0500') : null,
+                    null);
+            refreshEvents(CTLEventsManager.filteredEvents, 1);
+        });
+        $('input[name="end_date"]').on('change', function(e) {
+            var date = e.target.value;
+            CTLEventsManager.filteredEvents =
+                CTLEventUtils.filterEventsByDateRange(
+                    CTLEventsManager.allEvents,
+                    null,
+                    date ? new Date(date + ' 00:00:00 GMT-0500') : null);
+            refreshEvents(CTLEventsManager.filteredEvents, 1);
+        });
+
         refreshEvents(CTLEventsManager.allEvents, 1);
     };
 
-    jQuery(document).ready(function() {
+    $(document).ready(function() {
         var boilerplate =  '<div class="pagination-holder"></div>' +
             '<div class="search-wrapper">' +
             '<form role="search">' +
@@ -105,7 +124,17 @@
             '<button class="close-icon" id="clear-search" type="reset">' +
             'Reset</button>' +
             '</form>' +
+
             '<div id="location-dropdown-container"></div>' +
+
+            '<label>From: ' +
+            '<input name="start_date" />' +
+            '</label>' +
+
+            '<label>To: ' +
+            '<input name="end_date" />' +
+            '</label>' +
+
             '<div id="search-results"></div>' +
             '</div>' +
             '<div id="calendarList"></div>' +

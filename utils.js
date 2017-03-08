@@ -38,6 +38,28 @@ CTLEventUtils.filterEventsByLocation = function(allEvents, loc) {
     return searchResults;
 };
 
+CTLEventUtils.filterEventsByDateRange = function(allEvents, startDate, endDate) {
+    if (!startDate && !endDate) {
+        return allEvents;
+    }
+
+    var events = [];
+
+    allEvents.forEach(function(e) {
+        if (startDate && endDate &&
+            e.getDateObject() >= startDate &&
+            e.getDateObject() <= endDate
+        ) {
+            events.push(e);
+        } else if (startDate && e.getDateObject() >= startDate) {
+            events.push(e);
+        } else if (endDate && e.getDateObject() <= endDate) {
+            events.push(e);
+        }
+    });
+
+    return events;
+};
 /**
  * Returns the index of the first element of the array that passes the
  * test.
