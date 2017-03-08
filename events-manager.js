@@ -1,4 +1,5 @@
 /* eslint-env node */
+/* global jQuery */
 
 if (typeof require === 'function') {
     var CTLEvent = require('./ctlevent.js').CTLEvent;
@@ -36,13 +37,16 @@ CTLEventsManager.loadEvents = function(eventsJson, searchIndex) {
 };
 
 CTLEventsManager.renderLocationDropdown = function() {
-    var $container = $('<select id="location-dropdown"></select>');
+    var $container = jQuery(
+        '<select id="location-dropdown">' +
+            '<option value="null">Location: All</option>' +
+            '</select>');
 
     var locations = [];
     CTLEventsManager.allEvents.forEach(function(e) {
-        var location = e.getCampusLocation();
-        if (locations.indexOf(location) === -1) {
-            locations.push(location);
+        var loc = e.getCampusLocation();
+        if (locations.indexOf(loc) === -1) {
+            locations.push(loc);
         }
     });
 

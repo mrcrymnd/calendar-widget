@@ -19,11 +19,10 @@
         $el.empty();
         $el.show();
         $el.append('<div class="arrow"></div>');
-        $el.append(
-                $('<h2>Results for: "' + q + '"</h2>')
-                );
+        $el.append($('<h2>Results for: "' + q + '"</h2>'));
 
-        CTLEventsManager.filteredEvents = CTLEventUtils.filterEvents(events, index, q);
+        CTLEventsManager.filteredEvents = CTLEventUtils.searchEvents(
+            events, index, q);
         if (CTLEventsManager.filteredEvents.length === 0) {
             $el.append('<div class="q-no-item">Unfortunately, there are ' +
                     'no results matching what you\'re looking for.</div>');
@@ -83,13 +82,21 @@
         });
 
         // Initialize the location dropdown
-        $('#location-dropdown-container').append(
-            CTLEventsManager.renderLocationDropdown());
+        var $el = $('#location-dropdown-container');
+        $el.append(CTLEventsManager.renderLocationDropdown());
+        $el.find('select#location-dropdown').on('change', function(e) {
+            var loc = e.target.value;
+
+            CTLEventsManager.filteredEvents =
+                CTLEventUtils.filterEventsByLocation(
+                    CTLEventsManager.allEvents, loc);
+            refreshEvents(CTLEventsManager.filteredEvents, 1);
+        });
 
         refreshEvents(CTLEventsManager.allEvents, 1);
     };
 
-    jQuery(document).ready(function(){
+    jQuery(document).ready(function() {
         var boilerplate =  '<div class="pagination-holder"></div>' +
             '<div class="search-wrapper">' +
             '<form role="search">' +

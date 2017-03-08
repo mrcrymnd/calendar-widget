@@ -6,7 +6,7 @@ var CTLEventUtils = {};
  * Given an array of all events and a search query,
  * return an array of search results.
  */
-CTLEventUtils.filterEvents = function(allEvents, index, q) {
+CTLEventUtils.searchEvents = function(allEvents, index, q) {
     var results = index.search(q);
 
     var searchResults = [];
@@ -14,6 +14,26 @@ CTLEventUtils.filterEvents = function(allEvents, index, q) {
         var e = allEvents[results[r].ref];
         searchResults.push(e);
     }
+
+    return searchResults;
+};
+
+/**
+ * Given an array of events and a location string, return an array of
+ * events that are in the location.
+ */
+CTLEventUtils.filterEventsByLocation = function(allEvents, loc) {
+    if (loc === null || loc === 'null') {
+        return allEvents;
+    }
+
+    var searchResults = [];
+
+    allEvents.forEach(function(e) {
+        if (e.getCampusLocation() === loc) {
+            searchResults.push(e);
+        }
+    });
 
     return searchResults;
 };

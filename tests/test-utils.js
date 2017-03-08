@@ -7,7 +7,7 @@ var CTLEventsManager = require('../events-manager.js').CTLEventsManager;
 var fs = require('fs');
 var lunr = require('lunr');
 
-describe('filterEvents', function() {
+describe('searchEvents', function() {
     var json = JSON.parse(fs.readFileSync('./tests/data.json', 'utf8'));
     var events = json.bwEventList.events;
 
@@ -20,8 +20,8 @@ describe('filterEvents', function() {
     var allEvents = CTLEventsManager.loadEvents(events, index);
 
     it('filters events accurately', function() {
-        assert.deepEqual(CTLEventUtils.filterEvents(allEvents, index, 'test'), []);
-        assert.equal(CTLEventUtils.filterEvents(allEvents, index, 'Media').length, 3);
+        assert.deepEqual(CTLEventUtils.searchEvents(allEvents, index, 'test'), []);
+        assert.equal(CTLEventUtils.searchEvents(allEvents, index, 'Media').length, 3);
     });
 });
 
