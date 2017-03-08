@@ -1,6 +1,10 @@
 /* eslint-env es6 */
 /* eslint-env node */
 
+if (typeof require === 'function') {
+    var CTLEventUtils = require('./utils.js').CTLEventUtils;
+}
+
 var propertiesString = function(properties) {
     var propString = '';
     for (var i in properties) {
@@ -52,12 +56,12 @@ var CTLEvent = function(event) {
  * Adds the given property to this event's propertyArray.
  */
 CTLEvent.prototype.addProperty = function(name, value) {
-    var found = this.propertyArray.findIndex(function(element) {
+    var index = CTLEventUtils.findIndex(this.propertyArray, function(element) {
         return element.name === name;
     });
 
-    if (found > -1) {
-        this.propertyArray[found].values.push(value);
+    if (index > -1) {
+        this.propertyArray[index].values.push(value);
     } else {
         this.propertyArray.push({
             name: name,
