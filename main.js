@@ -82,6 +82,10 @@
             }
         });
 
+        // Initialize the location dropdown
+        $('#location-dropdown-container').append(
+            CTLEventsManager.renderLocationDropdown());
+
         refreshEvents(CTLEventsManager.allEvents, 1);
     };
 
@@ -89,9 +93,12 @@
         var boilerplate =  '<div class="pagination-holder"></div>' +
             '<div class="search-wrapper">' +
             '<form role="search">' +
-            '<input id="q" type="text" required="" class="search-box" placeholder="I\'m searching for...">' +
-            '<button class="close-icon" id="clear-search" type="reset">Reset</button>' +
+            '<input id="q" type="text" required="" class="search-box" ' +
+            'placeholder="I\'m searching for...">' +
+            '<button class="close-icon" id="clear-search" type="reset">' +
+            'Reset</button>' +
             '</form>' +
+            '<div id="location-dropdown-container"></div>' +
             '<div id="search-results"></div>' +
             '</div>' +
             '<div id="calendarList"></div>' +

@@ -70,6 +70,16 @@ CTLEvent.prototype.addProperty = function(name, value) {
     }
 };
 
+// TODO: this could be done on event initialization
+CTLEvent.prototype.getCampusLocation = function() {
+    for (var i = 0; i < this.propertyArray.length; i++) {
+        if (this.propertyArray[i].name === 'Location') {
+            return this.propertyArray[i].values[0];
+        }
+    }
+    return 'Columbia University';
+};
+
 CTLEvent.prototype.render = function() {
     return '<div class="event">' +
         '<div class="event_specifics">' +

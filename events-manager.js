@@ -35,6 +35,25 @@ CTLEventsManager.loadEvents = function(eventsJson, searchIndex) {
     return events;
 };
 
+CTLEventsManager.renderLocationDropdown = function() {
+    var $container = $('<select id="location-dropdown"></select>');
+
+    var locations = [];
+    CTLEventsManager.allEvents.forEach(function(e) {
+        var location = e.getCampusLocation();
+        if (locations.indexOf(location) === -1) {
+            locations.push(location);
+        }
+    });
+
+    locations.forEach(function(e) {
+        $container.append(
+            '<option value="' + e + '">' + e + '</option>');
+    });
+
+    return $container;
+};
+
 if (typeof module !== 'undefined') {
     module.exports = { CTLEventsManager: CTLEventsManager };
 }
