@@ -93,7 +93,8 @@
             refreshEvents(CTLEventsManager.filteredEvents, 1);
         });
 
-        $('input[name="start_date"]').on('change', function(e) {
+        var $startInput = $('input[name="start_date"]');
+        $startInput.on('change', function(e) {
             var date = e.target.value;
             CTLEventsManager.filteredEvents =
                 CTLEventUtils.filterEventsByDateRange(
@@ -102,7 +103,10 @@
                     null);
             refreshEvents(CTLEventsManager.filteredEvents, 1);
         });
-        $('input[name="end_date"]').on('change', function(e) {
+        $startInput.datepicker();
+
+        var $endInput = $('input[name="end_date"]');
+        $endInput.on('change', function(e) {
             var date = e.target.value;
             CTLEventsManager.filteredEvents =
                 CTLEventUtils.filterEventsByDateRange(
@@ -111,6 +115,7 @@
                     date ? new Date(date + ' 00:00:00 GMT-0500') : null);
             refreshEvents(CTLEventsManager.filteredEvents, 1);
         });
+        $endInput.datepicker();
 
         refreshEvents(CTLEventsManager.allEvents, 1);
     };
