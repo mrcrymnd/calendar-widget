@@ -17,7 +17,7 @@ describe('CTLEvent', function() {
             var e = new CTLEvent(events[0]);
             assert.equal(e.id, events[0].guid);
             assert.equal(e.title, events[0].summary);
-            assert.equal(e.start, events[0].start_longdate);
+            assert.equal(e.longDate, events[0].start_longdate);
             assert.equal(e.startTime, events[0].start_time);
             assert.equal(e.endTime, events[0].end_time);
             assert.equal(e.url, events[0].eventlink);

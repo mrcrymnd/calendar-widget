@@ -20,7 +20,7 @@ var propertiesString = function(properties) {
 var CTLEvent = function(event) {
     this.id = event.guid;
     this.title = event.summary;
-    this.start = event.start_longdate;
+    this.longDate = event.start_longdate;
     this.startTime = event.start_time;
     this.endTime = event.end_time;
     this.url = event.eventlink;
@@ -50,6 +50,10 @@ var CTLEvent = function(event) {
             this.addProperty(propList[0], propList[1]);
         }
     }
+};
+
+CTLEvent.prototype.getDateObject = function() {
+    return new Date(this.longDate);
 };
 
 /**
@@ -84,7 +88,7 @@ CTLEvent.prototype.render = function() {
     return '<div class="event">' +
         '<div class="event_specifics">' +
         '<h3><a href="' + this.url +'">' + this.title + '</a></h3>' +
-        '<h4>' + this.start + ' ' + this.startTime + ' &ndash; '
+        '<h4>' + this.longDate + ' ' + this.startTime + ' &ndash; '
         + this.endTime + '</h4>' +
         '</div>' +
         '<div class="event_description"><p>' + this.description + '</p></div>' +
