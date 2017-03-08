@@ -105,7 +105,17 @@
             '<button class="close-icon" id="clear-search" type="reset">' +
             'Reset</button>' +
             '</form>' +
+
             '<div id="location-dropdown-container"></div>' +
+
+            '<label>From: ' +
+            '<input name="start_date" />' +
+            '</label>' +
+
+            '<label>To: ' +
+            '<input name="end_date" />' +
+            '</label>' +
+
             '<div id="search-results"></div>' +
             '</div>' +
             '<div id="calendarList"></div>' +
