@@ -1,10 +1,18 @@
 /* eslint-env es6 */
 /* eslint-env node */
 
+if (typeof require === 'function') {
+    var CTLEventUtils = require('./utils.js').CTLEventUtils;
+}
+
 var propertiesString = function(properties) {
     var propString = '';
     for (var i in properties) {
-        propString += '<span>' + i + ': </span>' + properties[i] + '</br>';
+        propString += '<span class="ctl-property-name">' + properties[i].name + ': </span>';
+        for (var j in properties[i].values) {
+            propString += '<span class="ctl-property-value">' + properties[i].values[j] + '</span> ';
+        }
+        propString += '</br>';
     }
     return propString;
 };
@@ -25,6 +33,8 @@ var CTLEvent = function(event) {
     this.groupSpecific = [];
     this.campusLocation = [];
 
+    this.propertyArray = [];
+
     var xprop = event.xproperties;
     if (!xprop) {
         xprop = [];
@@ -36,31 +46,27 @@ var CTLEvent = function(event) {
         if (xprop[i]['X-BEDEWORK-ALIAS']) {
             aliasString = xprop[i]['X-BEDEWORK-ALIAS'].values.text;
             propList = aliasString.split('/').slice(-2);
-            switch (propList[0]) {
-                case 'Category':
-                    this.category.push(propList[1]);
-                    break;
 
-                case 'Type':
-                    this.type.push(propList[1]);
-                    break;
-
-                case 'Events open to':
-                    this.eventsOpenTo.push(propList[1]);
-                    break;
-
-                case 'Group-Specific':
-                    this.groupSpecific.push(propList[1]);
-                    break;
-
-                case 'Location':
-                    this.campusLocation.push(propList[1]);
-                    break;
-
-                default:
-                    break;
-            }
+            this.addProperty(propList[0], propList[1]);
         }
+    }
+};
+
+/**
+ * Adds the given property to this event's propertyArray.
+ */
+CTLEvent.prototype.addProperty = function(name, value) {
+    var index = CTLEventUtils.findIndex(this.propertyArray, function(element) {
+        return element.name === name;
+    });
+
+    if (index > -1) {
+        this.propertyArray[index].values.push(value);
+    } else {
+        this.propertyArray.push({
+            name: name,
+            values: [value]
+        });
     }
 };
 
@@ -73,7 +79,7 @@ CTLEvent.prototype.render = function() {
         </div>
         <div class="event_description"><p>${this.description}</p></div>
         <div class="location"><span class="event_location">Location: </span>${this.location}</div>
-        <div class="event_properties">${ propertiesString(this.properties)}</div>
+        <div class="event_properties">${ propertiesString(this.propertyArray)}</div>
         </div>`;
 };
 

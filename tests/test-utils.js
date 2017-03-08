@@ -1,4 +1,3 @@
-
 /* eslint-env node */
 /* eslint-env mocha */
 
@@ -23,5 +22,26 @@ describe('filterEvents', function() {
     it('filters events accurately', function() {
         assert.deepEqual(CTLEventUtils.filterEvents(allEvents, index, 'test'), []);
         assert.equal(CTLEventUtils.filterEvents(allEvents, index, 'Media').length, 3);
+    });
+});
+
+describe('findIndex', function() {
+    it('accepts an empty array', function() {
+        var i = CTLEventUtils.findIndex([], function(e) {
+            return e === 6;
+        });
+        assert.equal(i, -1);
+    });
+
+    it('returns an accurate index', function() {
+        var i = CTLEventUtils.findIndex([1, 2, 6, 3], function(e) {
+            return e === 6;
+        });
+        assert.equal(i, 2);
+
+        i = CTLEventUtils.findIndex([1, 2, 6, 3], function(e) {
+            return e === 66;
+        });
+        assert.equal(i, -1);
     });
 });
