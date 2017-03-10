@@ -94,7 +94,7 @@
         });
 
         // Initialize the audience dropdown
-        var $el = $('#audience-dropdown-container');
+        $el = $('#audience-dropdown-container');
         $el.append(CTLEventsManager.renderAudienceDropdown());
         $el.find('select#audience-dropdown').on('change', function(e) {
             var loc = e.target.value;

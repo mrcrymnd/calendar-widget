@@ -67,12 +67,11 @@ CTLEventsManager.renderAudienceDropdown = function() {
     var allAudiences = [];
     CTLEventsManager.allEvents.forEach(function(e) {
         var audiences = e.getAudience();
-    audiences.forEach(function (audience) {
+        audiences.forEach(function (audience) {
             if (allAudiences.indexOf(audience) === -1) {
-        allAudiences.push(audience);
+                allAudiences.push(audience);
             }
-    });
-
+        });
     });
 
     allAudiences.forEach(function(e) {
