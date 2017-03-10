@@ -58,6 +58,30 @@ CTLEventsManager.renderLocationDropdown = function() {
     return $container;
 };
 
+CTLEventsManager.renderAudienceDropdown = function() {
+    var $container = jQuery(
+        '<select id="audience-dropdown">' +
+            '<option value="null">Audience: All</option>' +
+            '</select>');
+
+    var allAudiences = [];
+    CTLEventsManager.allEvents.forEach(function(e) {
+        var audiences = e.getAudience();
+        audiences.forEach(function (audience) {
+            if (allAudiences.indexOf(audience) === -1) {
+                allAudiences.push(audience);
+            }
+        });
+    });
+
+    allAudiences.forEach(function(e) {
+        $container.append(
+            '<option value="' + e + '">' + e + '</option>');
+    });
+
+    return $container;
+};
+
 if (typeof module !== 'undefined') {
     module.exports = { CTLEventsManager: CTLEventsManager };
 }

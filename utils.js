@@ -38,6 +38,22 @@ CTLEventUtils.filterEventsByLocation = function(allEvents, loc) {
     return searchResults;
 };
 
+CTLEventUtils.filterEventsByAudience = function(allEvents, audience) {
+    if (audience === null || audience === 'null') {
+        return allEvents;
+    }
+
+    var searchResults = [];
+
+    allEvents.forEach(function(e) {
+        if (e.getAudience().indexOf(audience) > -1) {
+            searchResults.push(e);
+        }
+    });
+
+    return searchResults;
+};
+
 CTLEventUtils.filterEventsByDateRange = function(allEvents, startDate, endDate) {
     if (!startDate && !endDate) {
         return allEvents;

@@ -93,6 +93,18 @@
             refreshEvents(CTLEventsManager.filteredEvents, 1);
         });
 
+        // Initialize the audience dropdown
+        $el = $('#audience-dropdown-container');
+        $el.append(CTLEventsManager.renderAudienceDropdown());
+        $el.find('select#audience-dropdown').on('change', function(e) {
+            var loc = e.target.value;
+
+            CTLEventsManager.filteredEvents =
+                CTLEventUtils.filterEventsByAudience(
+                    CTLEventsManager.allEvents, loc);
+            refreshEvents(CTLEventsManager.filteredEvents, 1);
+        });
+
         var $startInput = $('input[name="start_date"]');
         $startInput.on('change', function(e) {
             var date = e.target.value;
@@ -131,6 +143,8 @@
             '</form>' +
 
             '<div id="location-dropdown-container"></div>' +
+
+            '<div id="audience-dropdown-container"></div>' +
 
             '<label>From: ' +
             '<input name="start_date" />' +
