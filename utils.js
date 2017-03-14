@@ -15,7 +15,11 @@ CTLEventUtils.searchEvents = function(allEvents, index, q) {
         searchResults.push(e);
     }
 
-    this.updateURL('q', q);
+    if (searchResults.length > 0) {
+        this.updateURL('q', q);
+    } else {
+        this.unsetURLParams('q');
+    }
     return searchResults;
 };
 
@@ -109,11 +113,6 @@ if (typeof module !== 'undefined') {
  * returns nothing.
  */
 CTLEventUtils.updateURL = function(key, value) {
-    if (key == null && value == null) {
-        window.history.replaceState(null, '', window.location.pathname);
-        return;
-    }
-
     var reString = key + '[=][^&]*';
     var regex = new RegExp(reString, 'i');
     var replacement = key + '=' + encodeURI(value);
@@ -129,4 +128,29 @@ CTLEventUtils.updateURL = function(key, value) {
 
     window.history.replaceState(null, '', queryString);
     return;
+};
+
+/**
+ * Clears all query string parameters from the URL
+ */
+CTLEventUtils.clearURLParams = function() {
+    window.history.replaceState(null, '', window.location.pathname);
+};
+
+/**
+ * Unsets an existing query string parameter.
+ *
+ * @param the key to remove
+ */
+CTLEventUtils.unsetURLParams = function(key) {
+    if (window.location.search.match(regex)) {
+        // this takes in a key, checks to see if it exists, then removes it
+        var reString = key + '[=][^&]*';
+        var regex = new RegExp(reString, 'i');
+        var queryString = '';
+        queryString = window.location.search.replace(regex, '');
+        // remove extraneous ampersand if needed
+        queryString = queryString.replace(/^\?&/, '?');
+        window.history.replaceState(null, '', queryString);
+    }
 };

@@ -26,7 +26,7 @@
         if (CTLEventsManager.filteredEvents.length === 0) {
             $el.append('<div class="q-no-item">Unfortunately, there are ' +
                     'no results matching what you\'re looking for.</div>');
-            CTLEventUtils.updateURL();
+            CTLEventUtils.updateURL('q');
         } else {
             refreshEvents(CTLEventsManager.filteredEvents, 1);
         }
@@ -37,7 +37,7 @@
         $('#calendarList').empty();
         $('#calendarList').hide();
         // remove query string from url
-        CTLEventUtils.updateURL();
+        CTLEventUtils.clearURLParams();
     };
 
     /**
