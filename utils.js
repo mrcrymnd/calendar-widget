@@ -15,6 +15,7 @@ CTLEventUtils.searchEvents = function(allEvents, index, q) {
         searchResults.push(e);
     }
 
+    this.updateURL('q', q);
     return searchResults;
 };
 
@@ -35,6 +36,7 @@ CTLEventUtils.filterEventsByLocation = function(allEvents, loc) {
         }
     });
 
+    this.updateURL('loc', loc);
     return searchResults;
 };
 
@@ -51,6 +53,7 @@ CTLEventUtils.filterEventsByAudience = function(allEvents, audience) {
         }
     });
 
+    this.updateURL('audience', audience);
     return searchResults;
 };
 
@@ -74,6 +77,8 @@ CTLEventUtils.filterEventsByDateRange = function(allEvents, startDate, endDate) 
         }
     });
 
+    this.updateURL('start', startDate);
+    this.updateURL('end', endDate);
     return events;
 };
 /**
@@ -94,3 +99,34 @@ CTLEventUtils.findIndex = function(array, testFunc) {
 if (typeof module !== 'undefined') {
     module.exports = { CTLEventUtils: CTLEventUtils };
 }
+
+/**
+ * Updates the query string of the URL
+ *
+ * If no parameters are passed, it updates the url to have no params.
+ * If params are passed, it updates them if they exist, else it inserts them.
+ *
+ * returns nothing.
+ */
+CTLEventUtils.updateURL = function(key, value) {
+    if (key == null && value == null) {
+        window.history.replaceState(null, '', window.location.pathname);
+        return;
+    }
+
+    var reString = key + '[=][^&]*';
+    var regex = new RegExp(reString, 'i');
+    var replacement = key + '=' + encodeURI(value);
+    var queryString = '';
+
+    if (window.location.search.match(regex)) {
+        queryString = window.location.search.replace(regex, replacement);
+    } else if (window.location.search){
+        queryString = window.location.search + '&' + replacement;
+    } else {
+        queryString = '?' + replacement;
+    }
+
+    window.history.replaceState(null, '', queryString);
+    return;
+};
