@@ -15,6 +15,11 @@ CTLEventUtils.searchEvents = function(allEvents, index, q) {
         searchResults.push(e);
     }
 
+    if (searchResults.length > 0) {
+        this.updateURL('q', q);
+    } else {
+        this.unsetURLParams('q');
+    }
     return searchResults;
 };
 
@@ -35,6 +40,7 @@ CTLEventUtils.filterEventsByLocation = function(allEvents, loc) {
         }
     });
 
+    this.updateURL('loc', loc);
     return searchResults;
 };
 
@@ -51,6 +57,7 @@ CTLEventUtils.filterEventsByAudience = function(allEvents, audience) {
         }
     });
 
+    this.updateURL('audience', audience);
     return searchResults;
 };
 
@@ -74,6 +81,8 @@ CTLEventUtils.filterEventsByDateRange = function(allEvents, startDate, endDate) 
         }
     });
 
+    this.updateURL('start', startDate);
+    this.updateURL('end', endDate);
     return events;
 };
 /**
@@ -94,3 +103,54 @@ CTLEventUtils.findIndex = function(array, testFunc) {
 if (typeof module !== 'undefined') {
     module.exports = { CTLEventUtils: CTLEventUtils };
 }
+
+/**
+ * Updates the query string of the URL
+ *
+ * If no parameters are passed, it updates the url to have no params.
+ * If params are passed, it updates them if they exist, else it inserts them.
+ *
+ * returns nothing.
+ */
+CTLEventUtils.updateURL = function(key, value) {
+    var reString = key + '[=][^&]*';
+    var regex = new RegExp(reString, 'i');
+    var replacement = key + '=' + encodeURI(value);
+    var queryString = '';
+
+    if (window.location.search.match(regex)) {
+        queryString = window.location.search.replace(regex, replacement);
+    } else if (window.location.search){
+        queryString = window.location.search + '&' + replacement;
+    } else {
+        queryString = '?' + replacement;
+    }
+
+    window.history.replaceState(null, '', queryString);
+    return;
+};
+
+/**
+ * Clears all query string parameters from the URL
+ */
+CTLEventUtils.clearURLParams = function() {
+    window.history.replaceState(null, '', window.location.pathname);
+};
+
+/**
+ * Unsets an existing query string parameter.
+ *
+ * @param the key to remove
+ */
+CTLEventUtils.unsetURLParams = function(key) {
+    if (window.location.search.match(regex)) {
+        // this takes in a key, checks to see if it exists, then removes it
+        var reString = key + '[=][^&]*';
+        var regex = new RegExp(reString, 'i');
+        var queryString = '';
+        queryString = window.location.search.replace(regex, '');
+        // remove extraneous ampersand if needed
+        queryString = queryString.replace(/^\?&/, '?');
+        window.history.replaceState(null, '', queryString);
+    }
+};
