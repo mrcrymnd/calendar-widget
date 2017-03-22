@@ -127,10 +127,15 @@
         $startInput.on('change', function(e) {
             var date = e.target.value;
             var startDate = date ? new Date(date + ' 00:00:00 GMT-0500') : null;
+            var endDate = $('input[name="end_date"]')[0].value;
+            if (endDate) {
+                endDate = new Date(endDate);
+            }
 
             CTLEventsManager.filteredEvents =
                 CTLEventUtils.filterEventsByDateRange(
-                    CTLEventsManager.allEvents, startDate, null);
+                    CTLEventsManager.allEvents,
+                    startDate, endDate);
 
             if (startDate) {
                 CTLEventUtils.updateURL(
@@ -144,10 +149,15 @@
         $endInput.on('change', function(e) {
             var date = e.target.value;
             var endDate = date ? new Date(date + ' 00:00:00 GMT-0500') : null;
+            var startDate = $('input[name="start_date"]')[0].value;
+            if (startDate) {
+                startDate = new Date(startDate);
+            }
 
             CTLEventsManager.filteredEvents =
                 CTLEventUtils.filterEventsByDateRange(
-                    CTLEventsManager.allEvents, null, endDate);
+                    CTLEventsManager.allEvents,
+                    startDate, endDate);
 
             if (endDate) {
                 CTLEventUtils.updateURL(

@@ -82,11 +82,13 @@ CTLEventUtils.filterEventsByDateRange = function(allEvents, startDate, endDate) 
     var events = [];
 
     allEvents.forEach(function(e) {
-        if (startDate && endDate &&
-            e.getDateObject() >= startDate &&
-            e.getDateObject() <= endDate
-        ) {
-            events.push(e);
+        if (startDate && endDate) {
+            if (
+                e.getDateObject() >= startDate &&
+                    e.getDateObject() <= endDate
+            ) {
+                events.push(e);
+            }
         } else if (startDate && e.getDateObject() >= startDate) {
             events.push(e);
         } else if (endDate && e.getDateObject() <= endDate) {
@@ -171,32 +173,35 @@ CTLEventUtils.unsetURLParams = function(key) {
  * passed from the query string parameters.
  */
 CTLEventUtils.readURLParams = function(eventsList, queryString, index) {
-    var params = [];
-    params = queryString.split('&');
+    var params = queryString.split('&');
+    var filteredEvents = eventsList.slice();
 
     params.forEach(function(el) {
         var splitParam = el.split('=');
 
         switch(splitParam[0]) {
             case 'q':
-                eventsList = CTLEventUtils.searchEvents(eventsList, index, splitParam[1]);
+                filteredEvents = CTLEventUtils.searchEvents(
+                    filteredEvents, index, splitParam[1]);
                 break;
             case 'loc':
-                eventsList = CTLEventUtils.filterEventsByLocation(eventsList, splitParam[1]);
+                filteredEvents = CTLEventUtils.filterEventsByLocation(
+                    filteredEvents, splitParam[1]);
                 break;
             case 'audience':
-                eventsList = CTLEventUtils.filterEventsByAudience(eventsList, splitParam[1]);
+                filteredEvents = CTLEventUtils.filterEventsByAudience(
+                    filteredEvents, splitParam[1]);
                 break;
             case 'start':
-                eventsList = CTLEventUtils.filterEventsByDateRange(eventsList,
-                    new Date(splitParam[1]), null);
+                filteredEvents = CTLEventUtils.filterEventsByDateRange(
+                    filteredEvents, new Date(splitParam[1]), null);
                 break;
             case 'end':
-                eventsList = CTLEventUtils.filterEventsByDateRange(eventsList,
-                    null, new Date(splitParam[1]));
+                filteredEvents = CTLEventUtils.filterEventsByDateRange(
+                    filteredEvents, null, new Date(splitParam[1]));
                 break;
         }
     });
 
-    return eventsList;
+    return filteredEvents;
 };
