@@ -71,3 +71,7 @@ span.ellipse.clickable {
     font-weight: bold;
     cursor: default;
 }
+
+.simple-pagination span {
+    cursor: pointer;
+}
