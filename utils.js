@@ -12,6 +12,12 @@ CTLEventUtils.formatShortDate = function(d) {
 /**
  * Given an array of all events and a search query,
  * return an array of search results.
+ *
+ * @param allEvents = an array of events
+ * @param index = the index object from Lunr
+ * @param q = the string to filter
+ *
+ * @return = an array of events that match the query
  */
 CTLEventUtils.searchEvents = function(allEvents, index, q) {
     var results = index.search(q);
@@ -22,11 +28,6 @@ CTLEventUtils.searchEvents = function(allEvents, index, q) {
         searchResults.push(e);
     }
 
-    if (searchResults.length > 0) {
-        this.updateURL('q', q);
-    } else {
-        this.unsetURLParams('q');
-    }
     return searchResults;
 };
 
@@ -47,7 +48,6 @@ CTLEventUtils.filterEventsByLocation = function(allEvents, loc) {
         }
     });
 
-    this.updateURL('loc', loc);
     return searchResults;
 };
 
@@ -64,10 +64,16 @@ CTLEventUtils.filterEventsByAudience = function(allEvents, audience) {
         }
     });
 
-    this.updateURL('audience', audience);
     return searchResults;
 };
 
+/**
+ * @param allEvents = an array of all events
+ * @param startDate = a date object representing the start date
+ * @param endDate = another date object
+ *
+ * @return an array of event indicies for the filtered date range.
+ */
 CTLEventUtils.filterEventsByDateRange = function(allEvents, startDate, endDate) {
     if (!startDate && !endDate) {
         return allEvents;
@@ -88,12 +94,6 @@ CTLEventUtils.filterEventsByDateRange = function(allEvents, startDate, endDate) 
         }
     });
 
-    if (startDate) {
-        this.updateURL('start', CTLEventUtils.formatShortDate(startDate));
-    }
-    if (endDate) {
-        this.updateURL('end', CTLEventUtils.formatShortDate(endDate));
-    }
     return events;
 };
 /**
@@ -164,4 +164,39 @@ CTLEventUtils.unsetURLParams = function(key) {
         queryString = queryString.replace(/^\?&/, '?');
         window.history.replaceState(null, '', queryString);
     }
+};
+
+/**
+ * This function takes in a list of events and applies filters to it
+ * passed from the query string parameters.
+ */
+CTLEventUtils.readURLParams = function(eventsList, queryString, index) {
+    var params = [];
+    params = queryString.split('&');
+
+    params.forEach(function(el) {
+        var splitParam = el.split('=');
+
+        switch(splitParam[0]) {
+            case 'q':
+                eventsList = CTLEventUtils.searchEvents(eventsList, index, splitParam[1]);
+                break;
+            case 'loc':
+                eventsList = CTLEventUtils.filterEventsByLocation(eventsList, splitParam[1]);
+                break;
+            case 'audience':
+                eventsList = CTLEventUtils.filterEventsByAudience(eventsList, splitParam[1]);
+                break;
+            case 'start':
+                eventsList = CTLEventUtils.filterEventsByDateRange(eventsList,
+                    new Date(splitParam[1]), null);
+                break;
+            case 'end':
+                eventsList = CTLEventUtils.filterEventsByDateRange(eventsList,
+                    null, new Date(splitParam[1]));
+                break;
+        }
+    });
+
+    return eventsList;
 };
