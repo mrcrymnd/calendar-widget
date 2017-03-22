@@ -3,6 +3,13 @@
 var CTLEventUtils = {};
 
 /**
+ * Takes a Date object and returns a string in yyyy-mm-dd format.
+ */
+CTLEventUtils.formatShortDate = function(d) {
+    return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+};
+
+/**
  * Given an array of all events and a search query,
  * return an array of search results.
  */
@@ -81,8 +88,12 @@ CTLEventUtils.filterEventsByDateRange = function(allEvents, startDate, endDate) 
         }
     });
 
-    this.updateURL('start', startDate);
-    this.updateURL('end', endDate);
+    if (startDate) {
+        this.updateURL('start', CTLEventUtils.formatShortDate(startDate));
+    }
+    if (endDate) {
+        this.updateURL('end', CTLEventUtils.formatShortDate(endDate));
+    }
     return events;
 };
 /**
