@@ -132,6 +132,8 @@
         });
         $endInput.datepicker();
 
+        CTLEventUtils.readURLParams(CTLEventsManager.allEvents);
+
         refreshEvents(CTLEventsManager.allEvents, 1);
     };
 
