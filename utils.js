@@ -199,4 +199,4 @@ CTLEventUtils.readURLParams = function(eventsList, queryString, index) {
     });
 
     return eventsList;
-}
+};
