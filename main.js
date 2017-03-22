@@ -75,6 +75,7 @@
         $('.pagination-holder').pagination({
             items: CTLEventsManager.allEvents.length,
             itemsOnPage: ITEMS_ON_PAGE,
+            useAnchors: false,
             cssStyle: 'ctl-theme',
             onPageClick: function(pageNumber) {
                 if (CTLEventsManager.filteredEvents.length > 0 || $('#q').val().length > 1) {
