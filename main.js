@@ -23,10 +23,11 @@
 
         CTLEventsManager.filteredEvents = CTLEventUtils.searchEvents(
             events, index, q);
+        CTLEventUtils.updateURL('q', q);
+
         if (CTLEventsManager.filteredEvents.length === 0) {
             $el.append('<div class="q-no-item">Unfortunately, there are ' +
                     'no results matching what you\'re looking for.</div>');
-            CTLEventUtils.updateURL('q');
         } else {
             refreshEvents(CTLEventsManager.filteredEvents, 1);
         }
@@ -93,6 +94,13 @@
             CTLEventsManager.filteredEvents =
                 CTLEventUtils.filterEventsByLocation(
                     CTLEventsManager.allEvents, loc);
+
+            if (loc && loc !== 'null') {
+                CTLEventUtils.updateURL('loc', loc);
+            } else {
+                CTLEventUtils.unsetURLParams('loc');
+            }
+
             refreshEvents(CTLEventsManager.filteredEvents, 1);
         });
 
@@ -100,22 +108,34 @@
         $el = $('#audience-dropdown-container');
         $el.append(CTLEventsManager.renderAudienceDropdown());
         $el.find('select#audience-dropdown').on('change', function(e) {
-            var loc = e.target.value;
+            var audience = e.target.value;
 
             CTLEventsManager.filteredEvents =
                 CTLEventUtils.filterEventsByAudience(
-                    CTLEventsManager.allEvents, loc);
+                    CTLEventsManager.allEvents, audience);
+
+            if (audience && audience !== 'null') {
+                CTLEventUtils.updateURL('audience', audience);
+            } else {
+                CTLEventUtils.unsetURLParams('audience');
+            }
+
             refreshEvents(CTLEventsManager.filteredEvents, 1);
         });
 
         var $startInput = $('input[name="start_date"]');
         $startInput.on('change', function(e) {
             var date = e.target.value;
+            var startDate = date ? new Date(date + ' 00:00:00 GMT-0500') : null;
+
             CTLEventsManager.filteredEvents =
                 CTLEventUtils.filterEventsByDateRange(
-                    CTLEventsManager.allEvents,
-                    date ? new Date(date + ' 00:00:00 GMT-0500') : null,
-                    null);
+                    CTLEventsManager.allEvents, startDate, null);
+
+            if (startDate) {
+                CTLEventUtils.updateURL(
+                    'start', CTLEventUtils.formatShortDate(startDate));
+            }
             refreshEvents(CTLEventsManager.filteredEvents, 1);
         });
         $startInput.datepicker();
@@ -123,18 +143,24 @@
         var $endInput = $('input[name="end_date"]');
         $endInput.on('change', function(e) {
             var date = e.target.value;
+            var endDate = date ? new Date(date + ' 00:00:00 GMT-0500') : null;
+
             CTLEventsManager.filteredEvents =
                 CTLEventUtils.filterEventsByDateRange(
-                    CTLEventsManager.allEvents,
-                    null,
-                    date ? new Date(date + ' 00:00:00 GMT-0500') : null);
+                    CTLEventsManager.allEvents, null, endDate);
+
+            if (endDate) {
+                CTLEventUtils.updateURL(
+                    'end', CTLEventUtils.formatShortDate(endDate));
+            }
             refreshEvents(CTLEventsManager.filteredEvents, 1);
         });
         $endInput.datepicker();
 
-        CTLEventUtils.readURLParams(CTLEventsManager.allEvents);
+        var queryString = window.location.search.replace(/^\?/, '');
+        var filteredEvents = CTLEventUtils.readURLParams(CTLEventsManager.allEvents, queryString, index);
 
-        refreshEvents(CTLEventsManager.allEvents, 1);
+        refreshEvents(filteredEvents, 1);
     };
 
     $(document).ready(function() {

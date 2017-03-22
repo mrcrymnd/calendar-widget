@@ -28,11 +28,6 @@ CTLEventUtils.searchEvents = function(allEvents, index, q) {
         searchResults.push(e);
     }
 
-    if (searchResults.length > 0) {
-        this.updateURL('q', q);
-    } else {
-        this.unsetURLParams('q');
-    }
     return searchResults;
 };
 
@@ -53,7 +48,6 @@ CTLEventUtils.filterEventsByLocation = function(allEvents, loc) {
         }
     });
 
-    this.updateURL('loc', loc);
     return searchResults;
 };
 
@@ -70,7 +64,6 @@ CTLEventUtils.filterEventsByAudience = function(allEvents, audience) {
         }
     });
 
-    this.updateURL('audience', audience);
     return searchResults;
 };
 
@@ -101,12 +94,6 @@ CTLEventUtils.filterEventsByDateRange = function(allEvents, startDate, endDate) 
         }
     });
 
-    if (startDate) {
-        this.updateURL('start', CTLEventUtils.formatShortDate(startDate));
-    }
-    if (endDate) {
-        this.updateURL('end', CTLEventUtils.formatShortDate(endDate));
-    }
     return events;
 };
 /**
@@ -183,8 +170,7 @@ CTLEventUtils.unsetURLParams = function(key) {
  * This function takes in a list of events and applies filters to it
  * passed from the query string parameters.
  */
-CTLEventUtils.readURLParams = function(eventsList) {
-    var queryString = window.location.search.replace(/^\?/, '');
+CTLEventUtils.readURLParams = function(eventsList, queryString, index) {
     var params = [];
     params = queryString.split('&');
 
@@ -193,27 +179,24 @@ CTLEventUtils.readURLParams = function(eventsList) {
 
         switch(splitParam[0]) {
             case 'q':
-                console.log("query is: " + splitParam[1])
                 eventsList = CTLEventUtils.searchEvents(eventsList, index, splitParam[1]);
                 break;
             case 'loc':
-                console.log("location is: " + splitParam[1])
                 eventsList = CTLEventUtils.filterEventsByLocation(eventsList, splitParam[1]);
                 break;
             case 'audience':
-                console.log("audience is: " + splitParam[1])
                 eventsList = CTLEventUtils.filterEventsByAudience(eventsList, splitParam[1]);
                 break;
             case 'start':
-                console.log("start date is: " + splitParam[1])
                 eventsList = CTLEventUtils.filterEventsByDateRange(eventsList,
                     new Date(splitParam[1]), null);
                 break;
             case 'end':
-                console.log("end date is: " + splitParam[1])
                 eventsList = CTLEventUtils.filterEventsByDateRange(eventsList,
                     null, new Date(splitParam[1]));
                 break;
         }
     });
+
+    return eventsList;
 }
