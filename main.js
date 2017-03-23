@@ -227,6 +227,7 @@
 
             if ($(this).val().length < 2) {
                 refreshEvents(CTLEventsManager.allEvents, 1);
+                CTLEventUtils.unsetURLParams('q');
                 return;
             }
             return doSearch(CTLEventsManager.allEvents);
