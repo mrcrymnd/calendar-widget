@@ -124,6 +124,7 @@
             refreshEvents(CTLEventsManager.filteredEvents, 1);
         });
 
+        // Initialize the start date field
         var $startInput = $('input[name="start_date"]');
         $startInput.on('change', function(e) {
             var date = e.target.value;
@@ -141,11 +142,14 @@
             if (startDate) {
                 CTLEventUtils.updateURL(
                     'start', CTLEventUtils.formatShortDate(startDate));
+            } else {
+                CTLEventUtils.unsetURLParams('start');
             }
             refreshEvents(CTLEventsManager.filteredEvents, 1);
         });
         $startInput.datepicker();
 
+        // Initialize the end date field
         var $endInput = $('input[name="end_date"]');
         $endInput.on('change', function(e) {
             var date = e.target.value;
@@ -163,6 +167,8 @@
             if (endDate) {
                 CTLEventUtils.updateURL(
                     'end', CTLEventUtils.formatShortDate(endDate));
+            } else {
+                CTLEventUtils.unsetURLParams('end');
             }
             refreshEvents(CTLEventsManager.filteredEvents, 1);
         });
