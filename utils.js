@@ -156,7 +156,7 @@ CTLEventUtils.clearURLParams = function() {
  * @param the key to remove
  */
 CTLEventUtils.unsetURLParams = function(key) {
-    if (window.location.search.match(regex)) {
+    if (window.location.search) {
         // this takes in a key, checks to see if it exists, then removes it
         var reString = key + '[=][^&]*';
         var regex = new RegExp(reString, 'i');
