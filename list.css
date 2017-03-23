@@ -19,3 +19,17 @@
 .event .location .event_location {
     font-weight: bold;
 }
+
+#loader-animation-container {
+    position: absolute;
+    height: 200px;
+    background-color: white;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ball-pulse > div {
+    background-color: #000000;
+}
