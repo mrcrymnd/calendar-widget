@@ -127,7 +127,9 @@
         var $startInput = $('input[name="start_date"]');
         $startInput.on('change', function(e) {
             var date = e.target.value;
-            var startDate = date ? new Date(date + ' 00:00:00 GMT-0500') : null;
+            // splits the format: MM/DD/YYYY
+            date = date.split('/');
+            var startDate = date ? new Date(date[2], date[0] - 1, date[1]) : null;
             var endDate = $('input[name="end_date"]')[0].value;
             if (endDate) {
                 endDate = new Date(endDate);
@@ -149,7 +151,9 @@
         var $endInput = $('input[name="end_date"]');
         $endInput.on('change', function(e) {
             var date = e.target.value;
-            var endDate = date ? new Date(date + ' 00:00:00 GMT-0500') : null;
+            // splits the format: MM/DD/YYYY
+            date = date.split('/');
+            var endDate = date ? new Date(date[2], date[0] - 1, date[1]) : null;
             var startDate = $('input[name="start_date"]')[0].value;
             if (startDate) {
                 startDate = new Date(startDate);
