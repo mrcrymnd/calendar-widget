@@ -186,6 +186,9 @@
 
     $(document).ready(function() {
         var boilerplate =  '<div class="pagination-holder"></div>' +
+            '<div id=loader-animation-container>' +
+            '<div class="loader-inner ball-pulse"><div></div><div></div><div></div></div>' +
+            '</div>' +
             '<div class="search-wrapper">' +
             '<form role="search">' +
             '<input id="q" type="text" required="" class="search-box" ' +
@@ -227,6 +230,7 @@
             },
             dataType: 'json',
             success: function(data) {
+                $('#loader-animation-container').fadeOut('slow');
                 initializeEventsPage(data.bwEventList.events);
             }
         });
