@@ -101,3 +101,14 @@ describe('unsetURLParams', function() {
         assert.equal(window.location.search, '');
     });
 });
+
+describe('readURLParams', function() {
+    it('returns an array of key-value pairs', function() {
+        assert.deepEqual(CTLEventUtils.readURLParams('foo=bar'),
+            [ {key: 'foo', value: 'bar' } ]);
+    });
+    it('returns an empty array when given nothing', function() {
+        assert.deepEqual(CTLEventUtils.readURLParams(''),
+            [ ]);
+    });
+});
