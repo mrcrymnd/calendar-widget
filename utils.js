@@ -183,25 +183,60 @@ CTLEventUtils.readURLParams = function(eventsList, queryString, index) {
             case 'q':
                 filteredEvents = CTLEventUtils.searchEvents(
                     filteredEvents, index, splitParam[1]);
+                CTLEventUtils.populateQ(splitParam[1]);
                 break;
             case 'loc':
                 filteredEvents = CTLEventUtils.filterEventsByLocation(
                     filteredEvents, splitParam[1]);
+                CTLEventUtils.populateLoc(splitParam[1]);
                 break;
             case 'audience':
                 filteredEvents = CTLEventUtils.filterEventsByAudience(
                     filteredEvents, splitParam[1]);
+                CTLEventUtils.populateAudience(splitParam[1]);
                 break;
             case 'start':
                 filteredEvents = CTLEventUtils.filterEventsByDateRange(
                     filteredEvents, new Date(splitParam[1]), null);
+                CTLEventUtils.populateStartTime(splitParam[1]);
                 break;
             case 'end':
                 filteredEvents = CTLEventUtils.filterEventsByDateRange(
                     filteredEvents, null, new Date(splitParam[1]));
+                CTLEventUtils.populateEndTime(splitParam[1]);
                 break;
         }
     });
 
     return filteredEvents;
+};
+
+CTLEventUtils.populateQ = function(qsParam) {
+    document.getElementById('q').value = qsParam;
+};
+
+CTLEventUtils.populateLoc = function(qsParam) {
+    document.querySelector('#location-dropdown [value="' + qsParam + '"]').selected = true;
+};
+
+CTLEventUtils.populateAudience = function(qsParam) {
+    document.querySelector('#audience-dropdown [value="' + qsParam + '"]').selected = true;
+};
+
+/**
+ * These functions expect the query string to passed
+ * in as this format YYYY-MM-DD
+ * This function will reformat it to DD/MM/YYYY before setting the
+ * value of the field
+ */
+CTLEventUtils.populateStartTime = function(qsParam) {
+    var sDate = qsParam.split('-');
+    sDate = sDate[1] + '/' + sDate[2] + '/' + sDate[0];
+    document.getElementsByName('start_date')[0].value = sDate;
+};
+
+CTLEventUtils.populateEndTime = function(qsParam) {
+    var eDate = qsParam.split('-');
+    eDate = eDate[1] + '/' + eDate[2] + '/' + eDate[0];
+    document.getElementsByName('end_date')[0].value = eDate;
 };
