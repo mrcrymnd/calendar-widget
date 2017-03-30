@@ -213,15 +213,15 @@ CTLEventUtils.readURLParams = function(eventsList, queryString, index) {
 
 CTLEventUtils.populateQ = function(qsParam) {
     document.getElementById('q').value = qsParam;
-}
+};
 
 CTLEventUtils.populateLoc = function(qsParam) {
     document.querySelector('#location-dropdown [value="' + qsParam + '"]').selected = true;
-}
+};
 
 CTLEventUtils.populateAudience = function(qsParam) {
     document.querySelector('#audience-dropdown [value="' + qsParam + '"]').selected = true;
-}
+};
 
 /**
  * These functions expect the query string to passed
@@ -233,10 +233,10 @@ CTLEventUtils.populateStartTime = function(qsParam) {
     var sDate = qsParam.split('-');
     sDate = sDate[1] + '/' + sDate[2] + '/' + sDate[0];
     document.getElementsByName('start_date')[0].value = sDate;
-}
+};
 
 CTLEventUtils.populateEndTime = function(qsParam) {
     var eDate = qsParam.split('-');
     eDate = eDate[1] + '/' + eDate[2] + '/' + eDate[0];
     document.getElementsByName('end_date')[0].value = eDate;
-}
+};
