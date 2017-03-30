@@ -179,7 +179,9 @@
         $endInput.datepicker();
 
         var queryString = window.location.search.replace(/^\?/, '');
-        var filteredEvents = CTLEventUtils.readURLParams(CTLEventsManager.allEvents, queryString, index);
+        var paramsArray = CTLEventUtils.readURLParams(queryString);
+        CTLEventUtils.populateURLParams(paramsArray);
+        var filteredEvents = CTLEventUtils.filterOnURLParams(paramsArray, CTLEventsManager.allEvents, index);
 
         refreshEvents(filteredEvents, 1);
     };
