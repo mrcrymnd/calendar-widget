@@ -171,72 +171,90 @@ CTLEventUtils.unsetURLParams = function(key) {
 /**
  * This function takes in a list of events and applies filters to it
  * passed from the query string parameters.
+ *
+ * It returns an array of objects of the form:
+ * { key: <key>, value: <value> }
  */
-CTLEventUtils.readURLParams = function(eventsList, queryString, index) {
+CTLEventUtils.readURLParams = function(queryString) {
+    var paramsArray = [];
     var params = queryString.split('&');
-    var filteredEvents = eventsList.slice();
 
     params.forEach(function(el) {
         var splitParam = el.split('=');
-
-        switch(splitParam[0]) {
-            case 'q':
-                filteredEvents = CTLEventUtils.searchEvents(
-                    filteredEvents, index, splitParam[1]);
-                CTLEventUtils.populateQ(splitParam[1]);
-                break;
-            case 'loc':
-                filteredEvents = CTLEventUtils.filterEventsByLocation(
-                    filteredEvents, splitParam[1]);
-                CTLEventUtils.populateLoc(splitParam[1]);
-                break;
-            case 'audience':
-                filteredEvents = CTLEventUtils.filterEventsByAudience(
-                    filteredEvents, splitParam[1]);
-                CTLEventUtils.populateAudience(splitParam[1]);
-                break;
-            case 'start':
-                filteredEvents = CTLEventUtils.filterEventsByDateRange(
-                    filteredEvents, new Date(splitParam[1]), null);
-                CTLEventUtils.populateStartTime(splitParam[1]);
-                break;
-            case 'end':
-                filteredEvents = CTLEventUtils.filterEventsByDateRange(
-                    filteredEvents, null, new Date(splitParam[1]));
-                CTLEventUtils.populateEndTime(splitParam[1]);
-                break;
-        }
+        paramsArray.push({
+            key: splitParam[0],
+            value: splitParam[1],
+        });
     });
 
-    return filteredEvents;
-};
-
-CTLEventUtils.populateQ = function(qsParam) {
-    document.getElementById('q').value = qsParam;
-};
-
-CTLEventUtils.populateLoc = function(qsParam) {
-    document.querySelector('#location-dropdown [value="' + qsParam + '"]').selected = true;
-};
-
-CTLEventUtils.populateAudience = function(qsParam) {
-    document.querySelector('#audience-dropdown [value="' + qsParam + '"]').selected = true;
+    return paramsArray;
 };
 
 /**
- * These functions expect the query string to passed
- * in as this format YYYY-MM-DD
- * This function will reformat it to DD/MM/YYYY before setting the
- * value of the field
+ * @param paramsArray = The array of objects that are composed of the URL
+ * parameter pairs.
+ *
+ * @param eventsList = An array of event objects to be filtered.
+ *
+ * @param index = The Lunr JS index object.
+ *
+ * @return = An array of filtered event objects.
  */
-CTLEventUtils.populateStartTime = function(qsParam) {
-    var sDate = qsParam.split('-');
-    sDate = sDate[1] + '/' + sDate[2] + '/' + sDate[0];
-    document.getElementsByName('start_date')[0].value = sDate;
+CTLEventUtils.filterOnURLParams = function(paramsArray, eventsList, index) {
+    paramsArray.forEach(function(el) {
+        switch(el.key) {
+            case 'q':
+                eventsList = CTLEventUtils.searchEvents(
+                    eventsList, index, el.value);
+                break;
+            case 'loc':
+                eventsList = CTLEventUtils.filterEventsByLocation(
+                    eventsList, el.value);
+                break;
+            case 'audience':
+                eventsList = CTLEventUtils.filterEventsByAudience(
+                    eventsList, el.value);
+                break;
+            case 'start':
+                eventsList = CTLEventUtils.filterEventsByDateRange(
+                    eventsList, new Date(el.value), null);
+                break;
+            case 'end':
+                eventsList = CTLEventUtils.filterEventsByDateRange(
+                    eventsList, null, new Date(el.value));
+                break;
+        }
+    });
+    return eventsList;
 };
 
-CTLEventUtils.populateEndTime = function(qsParam) {
-    var eDate = qsParam.split('-');
-    eDate = eDate[1] + '/' + eDate[2] + '/' + eDate[0];
-    document.getElementsByName('end_date')[0].value = eDate;
+/**
+ * This function populates the form fields with values from the URL query string.
+ * @param paramsArray = The array of objects that are composed of the URL
+ * parameter pairs.
+ */
+CTLEventUtils.populateURLParams = function(paramsArray) {
+    paramsArray.forEach(function(el) {
+        switch(el.key) {
+            case 'q':
+                document.getElementById('q').value = el.value;
+                break;
+            case 'loc':
+                document.querySelector('#location-dropdown [value="' + el.value + '"]').selected = true;
+                break;
+            case 'audience':
+                document.querySelector('#audience-dropdown [value="' + el.value + '"]').selected = true;
+                break;
+            case 'start':
+                var sDate = el.value.split('-');
+                sDate = sDate[1] + '/' + sDate[2] + '/' + sDate[0];
+                document.getElementsByName('start_date')[0].value = sDate;
+                break;
+            case 'end':
+                var eDate = el.value.split('-');
+                eDate = eDate[1] + '/' + eDate[2] + '/' + eDate[0];
+                document.getElementsByName('end_date')[0].value = eDate;
+                break;
+        }
+    });
 };
