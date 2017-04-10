@@ -1,35 +1,73 @@
-.event {
-    width: 100%;
-    margin-bottom: 2.5em;
+.event
+{
+	width: 100%;
+	margin-top: 2.5em;
 }
 
-.event .event_specifics {
-     margin-bottom: 1.25em;
-     border-bottom: 1px solid;
+.event *, form *, select { font-size: 16px!important; }
+
+.event .event_specifics
+{
+	padding-top: 1.25em;
+	border-top: 1px solid #eee;
 }
 
-.event .event_specifics a:hover {
-    cursor: pointer;
+.event .event_specifics a:hover { cursor: pointer; }
+
+.event .location, .event_properties
+{
+	margin-top: 1em;
 }
 
-.event .location {
-    font-size: .85em;
+.event_properties { }
+.event .location .event_location, .ctl-property-name { font-weight: bold; }
+
+#loader-animation-container
+{
+	position: absolute;
+	height: 200px;
+	background-color: white;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
-.event .location .event_location {
-    font-weight: bold;
+.ball-pulse > div { background-color: #666; }
+
+button { display: none; }
+
+.search-wrapper
+{
+	position: relative;
+	background-color: #eee;
+	margin-top: 1em;
+	padding: .5em;
+    border-radius: 5px;
 }
 
-#loader-animation-container {
-    position: absolute;
-    height: 200px;
-    background-color: white;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+#left-area ul, .entry-content ul, .comment-content ul, body.et-pb-preview #main-content .container ul {
+    padding: 0px;
+    line-height: 26px;
+}
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {background-color: #eee!important;}
+
+.ctl-theme .current {
+    background-color: #ccc!important;
+    color: white;
+    border-color: #444;
+    cursor: default;
 }
 
-.ball-pulse > div {
-    background-color: #000000;
+
+.sharedaddy {display: none;}
+
+@media (max-width: 960px)
+{
+	form, label, input, select
+	{
+		display: block;
+		margin-top: 5px;
+		width: 100%;
+	}
 }
